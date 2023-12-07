@@ -3,7 +3,7 @@
 A population response curve in neuroscience represents the collective neural responses  of a group of neurons plotted against varying stimulus conditions, illustrating how the overall neural population responds to different inputs Dayan and Abbot [^1]. Understanding population response curves is crucial for deciphering how neural circuits process information and respond to external stimuli, providing insights into the functioning of the nervous system. 
 
 
-[^1] Dayan, Peter, and Abbott, L. F.. Theoretical Neuroscience: Computational and Mathematical Modeling of Neural Systems. United Kingdom, MIT Press, 2001.
+[^1]: Dayan, Peter, and Abbott, L. F.. Theoretical Neuroscience: Computational and Mathematical Modeling of Neural Systems. United Kingdom, MIT Press, 2001.
 
 
 ###  Population Response Curve based Decoding of Mean Direction using Mouse Calcium Imaging Data
