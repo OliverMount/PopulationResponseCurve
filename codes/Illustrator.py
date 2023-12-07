@@ -34,19 +34,20 @@ for idx, mean in enumerate(mean_values):
         ax.plot(x, y, color=colors[idx], alpha=0.8,lw=3)
  
  
-ax.set_xticks([]) 
+ax.set_xticks(x,range(num_points))
+ax.set_xlabel("Stimulus index",fontsize=20)
 for mean in mean_values:
     ax.axvline(x=mean, color='gray', linestyle='--', alpha=0.5)  
 ax.set_ylim(-0.1,10) 
  
 ax.spines[['top', 'right']].set_visible(False)
 ax.spines[['bottom', 'left']].set_linewidth(3)
-ax.tick_params(axis='both', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='y', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='x', which='major',labelsize=20,pad=8,length=10,width=2,direction='out')
 
 fig.tight_layout(pad=2)  
 plt.show()
-fig.savefig("/home/olive/Desktop/NeuronsTuningCurves.png",dpi=300)
- 
+fig.savefig("/home/olive/Desktop/NeuronsTuningCurves.png",dpi=300) 
 
 
 ###################################################
@@ -68,16 +69,18 @@ for k in range(len(x_positions)):
 	ax.scatter(np.repeat(x_positions[k], 2), flattened_values[2*k:2*k+2], color=colors[k], marker='o')
 ax.plot(averaged_row, color='k', linestyle='-', linewidth=3,marker='o',alpha=0.3)
 
-ax.set_xticks([])
+ax.set_xlabel("Stimulus index",fontsize=20)
+ax.set_xticks(x_positions)
 ax.spines[['top', 'right']].set_visible(False)
 ax.spines[['bottom', 'left']].set_linewidth(3)
-ax.tick_params(axis='both', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='y', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='x', which='major',labelsize=20,pad=8,length=10,width=2,direction='out')
 ax.set_ylim(-0.1,10)
+
 
 fig.tight_layout(pad=2)  
 plt.show()
-fig.savefig("/home/olive/Desktop/Stimulus4_PopRespCur.png",dpi=300)
-
+fig.savefig("/home/olive/Desktop/Stimulus4_PopRespCur.png",dpi=300) 
 
 
 ###################################################
@@ -92,18 +95,17 @@ for given_stimulus in range(num_points):
     reshaped_values = row_to_plot.reshape(-1, 2)
     flattened_values = reshaped_values.flatten()
     
-    x_positions = np.arange(0, num_points) 
-    # Plot the scatter plot
-    #for k in range(len(x_positions)):
-    #	ax.scatter(np.repeat(x_positions[k], 2), flattened_values[2*k:2*k+2], color=colors[k], marker='o')
+    x_positions = np.arange(0, num_points)  
     ax.plot(averaged_row, color=colors[given_stimulus], linestyle='-', linewidth=3,marker='o')
     
-ax.set_xticks([])
+ax.set_xticks(x_positions)
+ax.set_xlabel("Stimulus index",fontsize=20)
 ax.spines[['top', 'right']].set_visible(False)
 ax.spines[['bottom', 'left']].set_linewidth(3)
-ax.tick_params(axis='both', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='y', which='major', left=False, right=False, labelleft=False)
+ax.tick_params(axis='x', which='major',labelsize=20,pad=8,length=10,width=2,direction='out')
 ax.set_ylim(-0.1,10)
     
 fig.tight_layout(pad=2)  
 plt.show()
-fig.savefig("/home/olive/Desktop/All_PopRespCurs.png",dpi=300)
+fig.savefig("/home/olive/Desktop/All_PopRespCurs.png",dpi=300) 
