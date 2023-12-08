@@ -20,9 +20,8 @@ import matplotlib
 import matplotlib.pyplot as plt  
 matplotlib.rcParams['axes.linewidth'] = 2
 
-# Load local modules
-scripts_dir='/media/olive/Research/oliver/IEMdecodingForCalciumData/scripts/'
-os.chdir(scripts_dir)
+# Load local modules 
+os.chdir('codes/')
 sys.path.append(os.getcwd())
 from utils import *	 # it imports the decoder as well
 
@@ -69,9 +68,7 @@ decoding_res_slopes_path=os.path.join(decoding_res_path ,'slopes')
 
 task_save_path=os.path.join(decoding_res_data_path,'task')
 passive_save_path=os.path.join(decoding_res_data_path,'passive')
-
  
-  
 # Adjustable parameter settings for decoding  
 fs=20	 # sampling frequency 
 ts=1/fs   # sampling time
@@ -111,15 +108,7 @@ diff_sig_task=0.30
 first_sig_passive=0.29
 second_sig_passive=0.28
 diff_sig_passive=0.27
-
-"""
-ymin=-0.05
-ymax=0.25 
-first_sig=0.24
-second_sig=0.23
-diff_sig=0.22
-"""
-
+ 
 lwd=3
 plt_lwd=3
 alp=0.2
@@ -356,8 +345,7 @@ for roi in ROIs_hetero:   # For each condition
 				
 		np.save(fname,slopes)   
 		
-############## passive data decoding   ################## 
- 
+############## passive data decoding   ##################  
 
 paradigm='passive' 
 # mouse name order
@@ -520,8 +508,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 			else:
 				print_status('Already done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
 
-# Centering and computing slopes for passive case
- 
+# Centering and computing slopes for passive case  
 # Slope dynamics computation and storing the results
 for roi in ROIs_hetero:   # For each condition  
 	for pp in percent_data: # For each percentage of data 
@@ -576,11 +563,8 @@ for roi in ROIs_hetero:   # For each condition
 		
 		 
  
-# Plotting and montaging  (with task as solid  line and passive as dashed line) 
-#plots_data_dir=decoding_res_fig_path 
-#os.chdir(os.path.join(decoding_res_slopes_path,paradigm)) 
-#flist=os.listdir()
-
+##Plotting and montaging  (with task as solid  line and passive as dashed line) 
+  
 
 cols=['Paradigm', 'Roi', 'Condition', 'Percentage', 'Cluster p-value','Significant time points']
 df = pd.DataFrame(columns=cols)
@@ -876,6 +860,8 @@ for roi in ROIs_hetero:  # for each roi
 		os.chdir('..') 
 		
 		
+
+# Extract the significant time points
 df.to_excel("/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/Significant.xlsx", index=False)
 		
 # montaging (this will work only if your system is Linux and montage installed))
@@ -921,166 +907,7 @@ if is_montage_installed():
 else:
 	print_status('Montage NOT installed in your computer. Skipping...') 
  
-	
-""" 
-# Plotting and montaging for one condition (as in the First submission)
-## Plotting the results (task as solid  line and passive as dashed line)
-
-plots_data_dir=decoding_res_fig_path 
-os.chdir(os.path.join(decoding_res_slopes_path,paradigm)) 
-flist=os.listdir()
-
-for folder in ROIs_hetero:  # for each folder
-#for folder in ROIs_hetero[1:2]:  # for checking
-	os.chdir(os.path.join(decoding_res_slopes_path,paradigm))
-	os.chdir(folder)
-	
-	for pp in percent_data: # for each p-value percentage 
-		
-	
-		os.chdir(str(pp))
-		
-		A=np.load('slopes.npy')
-		
-		sig1=A[:,:,0]  # homo  # no. mouse X no. time points X (homo or hetero)
-		sig2=A[:,:,1]  # hetero   
-		
-		fig, ax = plt.subplots(1,1,figsize=(7,7))	
-		# plot the mean and error bar
-		ax.plot(tt,np.mean(sig1,0),'r-',tt,np.mean(sig2,0),'b-',linewidth=plt_lwd) 
-		ax.fill_between(tt,np.mean(sig1,0)- (np.std(sig1,0)/np.sqrt(sig1.shape[0])),  
-						   np.mean(sig1,0)+ (np.std(sig1,0)/np.sqrt(sig1.shape[0])),alpha=alp,color='r')
-		ax.fill_between(tt,np.mean(sig2,0)- (np.std(sig2,0)/np.sqrt(sig2.shape[0])),  
-						   np.mean(sig2,0)+ (np.std(sig2,0)/np.sqrt(sig2.shape[0])),alpha=alp,color='b') 
-
-		
-		# permutation clustering for homo
-		T_obs, clusters, cluster_p_values, H0 = permutation_cluster_1samp_test(sig1,
-																			   tail=1,
-																			   n_permutations=nperm)
-		clus=[]
-		p=0
-		for k in cluster_p_values:
-			if k<(cluster_alpha):
-				clus.extend(clusters[p])
-				p=p+1
-			else:
-				p=p+1  
-
-		if len(clus):
-			
-			clus=np.concatenate(clus)
-			clus=clus[clus>20]
-			
-			sig_tt=tt[clus]  # Significant time points
-			ax.plot(sig_tt,np.repeat(first_sig,len(sig_tt)),'r-', linewidth=lwd) 
-			slope_sig1=np.mean(A[:,clus,0],1)	
-		else:
-			print_status('No Significant clusters in ' + folder + '  ' + str(pp) +' (homo) case')
-			slope_sig1=np.zeros(sig1.shape[0])
-		
-		#print('Slope sig 1', slope_sig1)
-		# permutation clustering for hetero
-		T_obs, clusters, cluster_p_values, H0 = permutation_cluster_1samp_test(sig2,
-																			   tail=1,
-																		   n_permutations=nperm)
-		
-		clus=[]
-		p=0
-		for k in cluster_p_values:
-			if k<(cluster_alpha):
-				clus.extend(clusters[p])
-				p=p+1
-			else:
-				p=p+1 
-				
-		if len(clus):
-			
-			clus=clus=np.concatenate(clus)
-			clus=clus[clus>20]
-			
-			sig_tt=tt[clus]  # Significant time points
-			ax.plot(sig_tt,np.repeat(second_sig,len(sig_tt)),'b-', linewidth=lwd) 
-		
-			slope_sig2=np.mean(A[:,clus,1],1)
-		else:
-			print_status('No Significant clusters in ' + folder + '  ' + str(pp) +' (hetero) case')
-			slope_sig2=np.zeros(sig2.shape[0])
-		
-
-		res=np.column_stack((slope_sig1,slope_sig2))
-		np.savetxt(os.path.join('/media/olive/Research/oliver/pop_slopes/',paradigm,folder+'_'+str(pp)+'.csv'),res,delimiter=',')
-
-		# permuation clustering for homo-hetero
-		T_obs, clusters, cluster_p_values, H0 = permutation_cluster_1samp_test(sig1-sig2,
-																			   tail=0,
-																			   n_permutations=nperm)
-		clus=[]
-		p=0
-		for k in cluster_p_values:
-			if k<(cluster_alpha):
-				clus.extend(clusters[p])
-				p=p+1
-			else:
-				p=p+1 
-		if len(clus):
-			sig_tt=tt[np.concatenate(clus)]  # Significant time points
-			ax.plot(sig_tt,np.repeat(diff_sig,len(sig_tt)),'k-', linewidth=lwd) 
-		
-		
-		ax.set_xticks([0, 1,2,3,4,5]) 
-		ax.set_yticks(np.arange(-0.2,ymax+0.01,0.1)) 
-		ax.set_xlim(xmin, xmax) 
-		ax.axvline(x=0,color='k',linestyle='--',lw=1)  
-		ax.axhline(y=0,color='k',linestyle='--',lw=1)  
-		ax.set_ylim(round(ymin,2), round(ymax,2))  
-		ax.spines[['top','right']].set_visible(False) 
-		ax.spines[['bottom','left']].set_linewidth(3)
- 
-		#ax.text(2.5,0.01, '(N=8)',fontsize=32) 
-		#ax.text(-1.3,-0.077, '$-0.5$',fontsize=24) 
-		ax.tick_params(axis='both', which='major', labelsize=24) 
-		
-		fig.tight_layout(pad=2)   
-		#plt.show() 
-		save_file_name=paradigm + '_' + folder + '_'+str(pp)+'.png'
-		fig.savefig(os.path.join(decoding_res_fig_path,save_file_name),dpi=300) 
-		os.chdir('..') 
-		
-# montaging (this will work only if your system is Linux and montage installed))
-if is_montage_installed():
-	os.chdir(decoding_res_fig_path)
-	create_dir('montages')
-
-	fname='montages/Task_V1_45.png' 
-	status=os.system('montage task_V1_45_0.png task_V1_45_10.png task_V1_45_20.png task_V1_45_40.png task_V1_45_60.png  task_V1_45_100.png   -tile 6x1  -geometry +1+1 ' + fname) 
-
-	fname='montages/Task_V1_90.png' 
-	status=os.system('montage task_V1_90_0.png task_V1_90_10.png task_V1_90_20.png task_V1_90_40.png task_V1_90_60.png  task_V1_90_100.png   -tile 6x1  -geometry +1+1 ' + fname) 
-
-	fname='montages/Task_V1_135.png' 
-	status=os.system('montage task_V1_135_0.png task_V1_135_10.png task_V1_135_20.png task_V1_135_40.png task_V1_135_60.png  task_V1_135_100.png   -tile 6x1  -geometry +1+1 ' + fname) 
-			
-	fname='montages/Task_PPC_45.png' 
-	status=os.system('montage task_PPC_45_0.png task_PPC_45_10.png task_PPC_45_20.png task_PPC_45_40.png task_PPC_45_60.png  task_PPC_45_100.png   -tile 6x1  -geometry +1+1 ' + fname) 
-
-	fname='montages/Task_PPC_90.png' 
-	status=os.system('montage task_PPC_90_0.png task_PPC_90_10.png task_PPC_90_20.png task_PPC_90_40.png task_PPC_90_60.png  task_PPC_90_100.png   -tile 6x1  -geometry +1+1 ' + fname) 
-
-	fname='montages/Task_PPC_135.png' 
-	status=os.system('montage task_PPC_135_0.png task_PPC_135_10.png task_PPC_135_20.png task_PPC_135_40.png task_PPC_135_60.png  task_PPC_135_100.png   -tile 6x1  -geometry +1+1 ' + fname)
-else:
-	print_status('Montage NOT installed in your computer. Skipping...') 
-
-"""	 
-
-# 1. once you receive the p-value; put them in the folder and run the R file PrefDirection.R to get the csv files iused for decoding;
-# Make sure to names are in the format as in task 
-# 2. Run the decoding with task off (only passive decoding) 
-# 3. Check the plots 
-# 4. Check the sslope summary plots in SlopesSummary.R
-
-
+  
 # Plot the summary of the slopes 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -1146,9 +973,7 @@ if is_montage_installed():
 	fname='montages/Summary_PPC.png'
 	status=os.system('montage Summary_PPC_45.png  Summary_PPC_90.png  Summary_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
     
-    
-    
-    
+     
 ### Plotting the dynamics for Fig. 3
 
 import os
@@ -1394,102 +1219,4 @@ plt.show()
 
 fig.savefig("/home/olive/Desktop/Dynamics_hetero.tiff",dpi=300)
 
-os.chdir('/media/olive/Research/oliver/scripts/') 
-
-
-
-
-
-### Conceptual figure making
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-# Set a seed for reproducibility
-#np.random.seed(42)
-
-# Mean values
-mean_values = np.arange(22.5, 360, 45)
-num_points=len(mean_values)
-# Number of neruons per stimulus
-num_curves = 2 
-
-# Initialize an array to store Gaussian curves
-gaussian_curves = np.zeros((num_points, num_points * num_curves))
-
-
-
-fig, ax = plt.subplots(1, figsize=(17, 5))
-
-
-# Generate and plot Gaussian curves
-#colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'orange']
-colors=  ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#17becf']
-
-for idx, mean in enumerate(mean_values):
-    for curve_num in range(num_curves):
-        # Randomly choose standard deviation in the range (10, 20)
-        std_dev = np.random.uniform(40, 50)
-
-        # Randomly choose peak amplitude in the range (1, 10)
-        peak_amplitude = np.random.uniform(1, 10)
-
-        # Use mean_values directly instead of generating x values
-        x = mean_values
-
-        # Generate Gaussian curve
-        y = peak_amplitude * np.exp(-(x - mean)**2 / (2 * std_dev**2))
-        
-        # Store the Gaussian curve in the array
-        gaussian_curves[:, idx * num_curves + curve_num] = y
-
-        # Plot only the data points at the mean with a smaller and unfilled marker
-        ax.scatter(x, y, color=colors[idx], marker='o', s=25)
-
-        # Plot the entire curve
-        ax.plot(x, y, color=colors[idx], alpha=0.8,lw=3)
-
-# Set x-axis ticks to show mean values
-ax.set_xticks([])
-
-# Add vertical lines to mark mean values
-for mean in mean_values:
-    ax.axvline(x=mean, color='gray', linestyle='--', alpha=0.5) 
-
-# Set y-axis limits to ensure zero points are clearly visible
-ax.set_ylim(-0.1,10)
-
-# Set labels and title
-#ax.set_xlabel('Mean motion direction')
-#ax.set_ylabel('Tuning curve amplitude (a.u)')
-ax.spines[['top', 'right']].set_visible(False)
-ax.spines[['bottom', 'left']].set_linewidth(3)
-ax.tick_params(axis='both', which='major', left=False, right=False, labelleft=False)
-
-# Show the plot
-plt.show() 
-
-
-given_stimulus=3
-row_to_plot = gaussian_curves[given_stimulus]   
-averaged_row = np.mean(row_to_plot.reshape(-1, 2), axis=1)
-reshaped_values = values.reshape(-1, 2)
-flattened_values = reshaped_values.flatten()
-
-x_positions = np.arange(0, 8)
-
-# Plot the scatter plot
-for k in range(len(x_positions)):
-	plt.scatter(np.repeat(x_positions[k], 2), flattened_values[2*k:2*k+2], color=colors[k], marker='o')
-plt.plot(averaged_row, color='grey', linestyle='-', linewidth=2,marker='o')
-
-# Set labels and title
-plt.xlabel('X-axis')
-plt.ylabel('Values')
-plt.title('Scatter Plot with Two Values at Each X-axis Position')
-
-# Add a legend
-plt.legend()
-
-# Show the plot
-plt.show()
+os.chdir('/media/olive/Research/oliver/scripts/')  
