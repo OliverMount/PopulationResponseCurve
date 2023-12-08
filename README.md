@@ -8,9 +8,12 @@ A population response curve in neuroscience represents the collective neural res
 
 Fig. 1 indicates a population of tuning curve each depicts the slectivity of a neuron. For illustration `two` nuerons per stimulus are shown.
 
+<figure>
 <p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
+<figcaption> Population of tuning curve </figcaption>
+</figure>
 
 Fig. 2 show a population response curve when the stimulus index is 3. 
 
@@ -52,19 +55,19 @@ This repository contains codes Python codes for obtaining population response cr
 
 	```
 	├── passive
-	│   ├── PPC_135
-	│   ├── PPC_45
-	│   ├── PPC_90
-	│   ├── V1_135
-	│   ├── V1_45
-	│   └── V1_90
+	│   ├── PPC_135
+	│   ├── PPC_45
+	│   ├── PPC_90
+	│   ├── V1_135
+	│   ├── V1_45
+	│   └── V1_90
 	├── pvals
-	│   ├── task_PPC_135.mat
-	│   ├── task_PPC_45.mat
-	│   ├── task_PPC_90.mat
-	│   ├── task_V1_135.mat
-	│   ├── task_V1_45.mat
-	│   └── task_V1_90.mat
+	│   ├── task_PPC_135.mat
+	│   ├── task_PPC_45.mat
+	│   ├── task_PPC_90.mat
+	│   ├── task_V1_135.mat
+	│   ├── task_V1_45.mat
+	│   └── task_V1_90.mat
 	└── task
 	    ├── PPC_135
 	    ├── PPC_45
@@ -79,15 +82,15 @@ This repository contains codes Python codes for obtaining population response cr
 ```
 .
 ├── plots
-│   ├── montages
-│   ├── task_V1_45_10.png
-│   ├── task_V1_45_20.png
-│   ├──        . 
-│   ├──        .  
-│   └── task_PPC_135_100.png
+│   ├── montages
+│   ├── task_V1_45_10.png
+│   ├── task_V1_45_20.png
+│   ├──        . 
+│   ├──        .  
+│   └── task_PPC_135_100.png
 ├── slopes
-│   └── task
-│   └── passive
+│   └── task
+│   └── passive
 └── tuning_curves
     ├── passive
     └── task
