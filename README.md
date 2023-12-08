@@ -13,14 +13,7 @@ Fig. 1 indicates a population of tuning curve each depicts the slectivity of a n
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
 <figcaption> Figure 1. Population of tuning curve </figcaption>
-</figure>
-
-
-<figure style="text-align: center;">
-<img src="figs/NeuronsTuningCurves.png" width="450" height="350" >
-<figcaption style="display: inline-block; text-align: center;">Figure 1. Population of tuning curve.</figcaption>
-</figure>
-
+</figure> 
 
 Fig. 2 show a population response curve when the stimulus index is 3. 
 
@@ -32,11 +25,16 @@ Fig. 2 show a population response curve when the stimulus index is 3.
 </figure>
 
 Fig. 3 shows a family of population response one for each stimulus.
-The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
 
+<figure>
 <p align='center'>
 <img src="figs/All_PopRespCurs.png" width="450" height="350">
 </p>
+<figcaption> Figure 3. family of population response curves </figcaption>
+</figure>
+
+The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
+
 
 ###  Population Response Curve based Decoding of Mean Direction using Mouse Calcium Imaging Data
 This repository contains codes Python codes for obtaining population response cruves calcium imaging data (preprocessed and epoked).
