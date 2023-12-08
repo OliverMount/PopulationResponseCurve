@@ -14,6 +14,8 @@ from scipy.io import loadmat,savemat
 from scipy.ndimage import gaussian_filter1d
 from scipy.stats import zscore 
 
+import colorsys
+
 angles=np.arange(22.5,360,45) # Stimulus angles 
 center_around=5  # Center the tuning curves around this angle 
 ns=len(angles)
@@ -177,28 +179,34 @@ def pop_decode_at_a_single_timept(ho,he,ho_la,he_la,Info):
 
 def center_all_and_mean(a,shift=5):  
 
-    res=np.zeros_like(a)
-    for k in range(a.shape[0]):
-        res[:,k]=np.roll(a[:,k],shift-k-1) 
-    
-    # return the centered and mean of all that centered
-    return np.mean(res,1)
+	res=np.zeros_like(a)
+	for k in range(a.shape[0]):
+		res[:,k]=np.roll(a[:,k],shift-k-1) 
+	
+	# return the centered and mean of all that centered
+	return np.mean(res,1)
 
 def zero_center_the_tcs(data,shift=5): 
-    # this function includes the conditions as well 
-    ns,ns, nconds, nt=data.shape
-    
-    res=np.zeros((ns,nconds,nt))
-    
-    for t in range(nt):
-        for c in range(nconds):
-            res[:,c,t]=center_all_and_mean(data[:,:,c,t],shift) 
-    return res
+	# this function includes the conditions as well 
+	ns,ns, nconds, nt=data.shape
+	
+	res=np.zeros((ns,nconds,nt))
+	
+	for t in range(nt):
+		for c in range(nconds):
+			res[:,c,t]=center_all_and_mean(data[:,:,c,t],shift) 
+	return res
 
 def get_tuning_curve(data,labels,dur_from=40,dur_to=120): 
-    return np.array([np.mean(data[labels==k,dur_from:dur_to]) for k in range(1,ns+1)])
-     
+	return np.array([np.mean(data[labels==k,dur_from:dur_to]) for k in range(1,ns+1)])
+	 
 def get_preference(data,labels,dur_from=40,dur_to=120):
-    
-    tc=get_tuning_curve(data,labels,dur_from=dur_from,dur_to=dur_to)
-    return np.where(tc==np.max(tc))[0]+1  # index from 1 to 8  
+	
+	tc=get_tuning_curve(data,labels,dur_from=dur_from,dur_to=dur_to)
+	return np.where(tc==np.max(tc))[0]+1  # index from 1 to 8   
+	
+def generate_contrasting_colors(n):  
+	rgb_colors = [colorsys.hsv_to_rgb(j/float(n), 0.75, 0.75) for j in range(n)] 
+	hex_colors = ['#%02x%02x%02x' % (int(r * 255), int(g * 255), int(b * 255)) for (r, g, b) in rgb_colors] 
+	return hex_colors
+
