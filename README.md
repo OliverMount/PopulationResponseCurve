@@ -8,7 +8,7 @@ A population response curve in neuroscience represents the collective neural res
 
 Fig. 1 indicates a population of tuning curve each depicts the slectivity of a neuron. For illustration `two` nuerons per stimulus are shown.
 
-<figure>
+<figure style="text-align: center;">
 <p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
