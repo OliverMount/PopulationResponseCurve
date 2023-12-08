@@ -10,15 +10,15 @@ Fig. 1 indicates a population of tuning curve each depicts the slectivity of a n
 The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
 
 <p align='center'>
-<img src="figs/NeuronsTuningCurves.png" width="350" height="350">
+<img src="figs/NeuronsTuningCurves.png" width="400" height="350">
 </p>
 
 <p align='center'>
-<img src="figs/Stimulus3_PopRespCur.png" width="350" height="350">
+<img src="figs/Stimulus3_PopRespCur.png" width="400" height="350">
 </p>
 
 <p align='center'>
-<img src="figs/All_PopRespCurs.png" width="350" height="350">
+<img src="figs/All_PopRespCurs.png" width="400" height="350">
 </p>
 
 
