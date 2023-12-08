@@ -13,7 +13,10 @@ The above figures are produced using the code Illustrator.py. Feel free to incre
 ![Figure 2.](figs/Stimulus3_PopRespCur.png "Population response of Stimulus 3")
 ![Figure 3.](figs/NeuronsTuningCurves.png "Array of responses")
 
+
+<p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="350" height="300">
+</p>
 
 ###  Population Response Curve based Decoding of Mean Direction using Mouse Calcium Imaging Data
 This repository contains codes Python codes for obtaining population response cruves calcium imaging data (preprocessed and epoked).
