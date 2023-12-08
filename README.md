@@ -6,7 +6,7 @@ A population response curve in neuroscience represents the collective neural res
 
 ### Short illustration
 
-Fig. 1 indicates a population of tuning curve each depicts the slectivity of a neuron. For illustration `two` nuerons per stimulus are shown.
+Fig. 1 indicates a population of tuning curves, each depicting the selectivity of a neuron. For illustration, two neurons per stimulus are shown. 
 
 <figure style="text-align: center;">
 <p align='center'>
@@ -15,7 +15,7 @@ Fig. 1 indicates a population of tuning curve each depicts the slectivity of a n
 <figcaption> Figure 1. Population of tuning curve </figcaption>
 </figure> 
 
-Fig. 2 show a population response curve when the stimulus index is 3. 
+Fig. 2 shows a population response curve when the stimulus index is 3.
 
 <figure>
 <p align='center'>
@@ -24,7 +24,7 @@ Fig. 2 show a population response curve when the stimulus index is 3.
 <figcaption> Figure 2. Population of tuning curve </figcaption>
 </figure>
 
-Fig. 3 shows a family of population response one for each stimulus.
+Fig. 3 shows a family of population response curves, one for each stimulus.
 
 <figure>
 <p align='center'>
@@ -33,21 +33,21 @@ Fig. 3 shows a family of population response one for each stimulus.
 <figcaption> Figure 3. family of population response curves </figcaption>
 </figure>
 
-The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
+The above figures are produced using the script `codes\Illustrator.py`. Feel free to increase the number of neurons per stimulus and plot the population responses.
 
 
 ###  Population Response Curve based Decoding of Mean Direction using Mouse Calcium Imaging Data
-This repository contains codes Python codes for obtaining population response cruves calcium imaging data (preprocessed and epoked).
-
-
+This repository contains Python code for obtaining population response curves from preprocessed and epoched calcium imaging data.
+ 
 
 ### Instruction for running the code
 
 1. git clone the repository to a local folder in your computer
 
-2. cd in to the scripts folder and set the following paths in the  pop_decoding.py
-	a. data_path: This is the path where the preprocessed calcium data are stored
-	b. pval_pref_path: path to the csv files where the pvalues of the tuned and untuned neurons as well as preferred direction of each neuron is stored
+2. Change into the 'scripts' folder and set the following paths in the 	'pop_decoding.py' file:
+
+	a. data_path: This is the path where the preprocessed calcium data is stored. 
+	b. pval_pref_path: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored."
 
 	In our case, the csv file is in the following format
 	
@@ -57,9 +57,9 @@ This repository contains codes Python codes for obtaining population response cr
 	| Animal.9 | PPC 135  | Hetero   | 0.09     |  1       |
 	| ...      | ...      | ...      | ...      | ...      |
 
-	If you have a csv file with different column names, you may need to adjust the script inside the pop_decoding.py
+	If you have a CSV file with different column names, you may need to adjust the script inside the 'pop_decoding.py' file
 
-	The two levels of the data directory will look like this
+	The directory structure with two levels of data will look like this:
 
 	```
 	├── passive
@@ -85,7 +85,7 @@ This repository contains codes Python codes for obtaining population response cr
 	    └── V1_90
 
 	```
-3. Run the pop_decoding.py it would create a decoding folder (this is the results folder) in the level as of the scripts folder. The structure  of the decoding folder would be the following
+3. Run the 'pop_decoding.py' script; it will create a 'decoding' folder (this is the results folder) at the same level as the 'scripts' folder. The structure of the 'decoding' folder would be the following:
 
 ```
 .
@@ -103,6 +103,6 @@ This repository contains codes Python codes for obtaining population response cr
     ├── passive
     └── task
 ```
-4. Individual figures for each condition is stored inside the plots directory.
+4. Individual figures for each condition are stored inside the 'plots' directory.
 
-Note:  Montage folder (that cotains sewed figure files) will be recrated only if the platform is Lixux (if montage is installed). 
+> Note: The 'Montage' folder (that contains stitched figure files) will be recreated only if the platform is Linux (if Montage is installed).
