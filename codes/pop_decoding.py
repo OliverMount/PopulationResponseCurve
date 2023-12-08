@@ -14,29 +14,26 @@ from scipy.ndimage import gaussian_filter1d
 from scipy import interpolate
 from scipy.io import loadmat,savemat   
 from scipy.ndimage import gaussian_filter1d
+from scipy.interpolate import interp1d 
 from scipy.stats import zscore 
 
 import matplotlib
+from matplotlib import cm
 import matplotlib.pyplot as plt  
 matplotlib.rcParams['axes.linewidth'] = 2
 
 # Load local modules 
 os.chdir('codes/')
 sys.path.append(os.getcwd())
-from utils import *	 # it imports the decoder as well
+from utils import *	 # it imports population response curve making methods
 
 from mne.stats import permutation_cluster_test,permutation_cluster_1samp_test
 import mne 
 
-from sklearn import *
-from sklearn.model_selection import LeaveOneOut 
-from sklearn.utils.validation import check_is_fitted 
-
 # Data path and parameter settings  
 data_path =  '/media/olive/Research/oliver/data_down/' 
-#p-values
+#Pvalues and Pref. Direction plots
 pval_pref_path='/media/olive/Research/oliver/prefDir'
-
 
 paradigm = 'task'   
 data_path_task =  os.path.join(data_path,paradigm)  
@@ -58,7 +55,6 @@ create_dir(task_save_path)
 create_dir(passive_save_path)
 create_dir(decoding_res_fig_path) 
 create_dir(decoding_res_slopes_path) 
-
 
 os.chdir(decoding_res_path)
 decoding_res_path=os.getcwd() 
@@ -95,11 +91,16 @@ nt=120   # 120 time-points for 20 Hz
 
 # parameters for cluster computation
 nperm,tail,cluster_alpha=5000,1,0.05
+
+# parameters for plotting figures
 xmin=-0.5
 xmax=4
 
 ymin=-0.05
 ymax=0.33
+
+
+# Significant time points placer
 # for task
 first_sig_task=0.32
 second_sig_task=0.31
@@ -157,7 +158,6 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	ani_list= [ani[0] for ani in ani_list] 
 	 
 	for p in range(len(ani_list)):   # For each animal
-	#for p in range(1):	
 		# load that animal data in homo and hetero group  
 		# This is not sorted yet using p-value
 		df_homo=B[(B['Sub']=='Animal.'+str(p+1))  & (B['Group'] =='homo')]
@@ -175,7 +175,6 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		# to get a data frame that is tuned in both the condition
 		# finding indices that match both conditions
 		final=pd.merge(df_homo_sorted[df_homo_sorted['Pvalue'] <= 0.05], df_hetero_sorted[df_hetero_sorted['Pvalue'] <= 0.05], left_index=True, right_index=True)
-		#print(final.shape)
 		TunedIndices=final.index.to_numpy() 
 		
 		
@@ -204,7 +203,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		del A
 		
 		# Shuffle labels and data before decoding 
-		# Not necessary for population decoding
+		# Not necessary for population decoding though
 		idx=np.random.permutation(len(homo_labels))
 		homo_labels=homo_labels[idx]
 		homo_data=homo_data[:,idx,:]
@@ -289,9 +288,9 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 			else:
 				print_status('Already done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
 
-# Centering and computing slopes for task case
+# Zero-centering and computing slopes for task case
  
-# Slope dynamics computation and storing the results
+##  Slope dynamics computation and storing the results
 for roi in ROIs_hetero:   # For each condition  
 	for pp in percent_data: # For each percentage of data 
 		
@@ -353,7 +352,6 @@ V1_passive=['1L.mat','1R.mat','2L.mat','Ylce.mat','Ylcf.mat','Ylcg.mat']
 PPC_passive=['3L.mat','3R.mat','Ylcb.mat', 'Ylch.mat','Ylci.mat','YLck.mat','Ylcl.mat','Ylcm.mat']
 
 for roi in ROIs_hetero:   # For each heterogeneous condition
-#for roi in ['V1_45']:	
 	os.chdir(data_path_passive)
 	print_status('Dealing with ROI: ' + roi)
 	
@@ -366,7 +364,6 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	print_status('No. of animals in ' + roi + ' is ' + str(noa)) 
 	
 	# load the neuron preferences and pvalue for all animals 
-	# The csv file is created in R (pls. look at the script PrefDirection.R in the scripts folder)
 	B = pd.read_csv(os.path.join(pval_pref_path, paradigm,roi+'_prefer_passive.csv'))
 	  
 	if roi.startswith('V1'):
@@ -378,7 +375,6 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	ani_list= [ani[0] for ani in ani_list] 
 	 
 	for p in range(len(ani_list)):   # For each animal
-	#for p in range(1):	
 		# load that animal data in homo and hetero group  
 		# This is not sorted yet using p-value
 		df_homo=B[(B['Sub']=='Animal.'+str(p+1))  & (B['Group'] =='homo')]
@@ -455,7 +451,6 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 					nper_cells = int(np.ceil((pp/100)*df_homo_sorted_pp.shape[0])) # get the number of cells 
 					
 					additional_neurons=df_homo_sorted_pp[:nper_cells].index.to_numpy()
-					 
 					
 					# Neurons used for decoding
 					NeuronIndices=np.concatenate((TunedIndices,additional_neurons))  
@@ -564,7 +559,6 @@ for roi in ROIs_hetero:   # For each condition
 		 
  
 ##Plotting and montaging  (with task as solid  line and passive as dashed line) 
-  
 
 cols=['Paradigm', 'Roi', 'Condition', 'Percentage', 'Cluster p-value','Significant time points']
 df = pd.DataFrame(columns=cols)
@@ -974,18 +968,8 @@ if is_montage_installed():
 	status=os.system('montage Summary_PPC_45.png  Summary_PPC_90.png  Summary_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
     
      
-### Plotting the dynamics for Fig. 3
+### Plotting the time-resolved dynamics in  Fig. 3C 
 
-import os
-import sys
-import numpy as np
-import matplotlib.pyplot as plt
-#plt.style.use('_mpl-gallery')
-#plt.rcParams['_3d.rcparams']['grid.linewidth'] = 0
-from scipy.io import loadmat,savemat
-from scipy.interpolate import interp1d 
-from scipy.ndimage import gaussian_filter
-from matplotlib import cm
 
 elevation = 19  # Specify the elevation angle (in degrees)
 azimuth = -36   # Specify the azimuth angle (in degrees)
@@ -1006,11 +990,7 @@ def func_mat(y):
         
     return np.stack(res,-1)
         
-        
-
-# Local modules
-sys.path.append('/media/olive/Research/oliver/scripts/')   
-from Decoder import InvertedEncoding
+# Retrieveing the population tuning curves (for homo and hetero cases) 
 
 os.chdir('/media/olive/Research/oliver/IEMdecodingForCalciumData/pop_decoding/tuning_curves/task/V1_135/40')
 flist=os.listdir()
@@ -1022,7 +1002,6 @@ for k in flist:
     
     A=np.load(k)
     B=zero_center_the_tcs(A,shift=wrap_around)
-    #C=B.transpose((0,2,1)) 
     
     homo.append(B[:,0,:])   # homo (all mouse)
     hetero.append(B[:,1,:]) #hetero (all mouse)
@@ -1032,7 +1011,7 @@ hetero=np.mean(np.stack(hetero,-1),-1) # mean across mouse
 
 
 homo=homo[:,10:100] 
-hetero= hetero[:,10:100]*0.6
+hetero= hetero[:,10:100]
   
 
 angles=np.arange(22.5,360,45)-202.5 # Stimulus angles
@@ -1046,36 +1025,22 @@ tt=np.arange(-0.5,4,ts)
 fig=plt.figure(figsize=(6,6))
 ax = plt.axes(projection='3d')
 ax._axis3don = False
-#fig, ax = plt.subplots(1,1,figsize=(8,5))   
- 
-#angles1=angles[[0,4,-1]]-202.5
-#ax.set_xticks(angles[[0,4,-1]],labels=angles1.astype('int64'))
-#angles1=angles-202.5
-#ax.set_xticks(angles,labels=angles1.astype('int64'))
+
 x = angles
 y = tt
 X,Y= np.meshgrid(x,y)
 Z = homo 
 Z=func_mat(Z)
 xnew=np.arange(-180,135,2)
-#xnew=x
 
 yy=np.arange(-0.5,4,ts)
 X,Y=np.meshgrid(xnew,yy)
 
-#Z=gaussian_filter(Z.T, sigma=15,truncate=4)
- 
-#Z=Z.T   
 ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",
                 linewidth=0,
                 rstride=1,
                 cstride=1,
                 edgecolors=None)  # surface plot
-
-#ax.set_xticks([-180,0,180])
-#ax.set_yticks([-0.5,0,1,2,3,4,5])
-#ax.set_zticks([0,0.2, 0.4,0.6])
- 
 
 ax.set_xlim(-180,180)
 ax.set_ylim(-0.5,4)
@@ -1085,13 +1050,6 @@ ax.invert_xaxis()   # also you have to invert the data
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_zticklabels([])
-
- 
-#ax.tick_params(axis='x', which='major', labelsize=24,pad=-2)  
-#ax.tick_params(axis='y', which='major', labelsize=24,pad=-2)  
-#ax.tick_params(axis='z', which='major', labelsize=24,pad=2)  
-
- 
 
 tmp_planes = ax.zaxis._PLANES 
 ax.zaxis._PLANES = ( tmp_planes[1], tmp_planes[1], 
@@ -1109,51 +1067,21 @@ ax.xaxis.pane.set_edgecolor('w')
 ax.yaxis.pane.set_edgecolor('w')
 ax.zaxis.pane.set_edgecolor('w')
 fig.tight_layout(pad=2)  
-#ax.view_init(50, 45)
-
- 
-#ax.set_yticks([0, 1]) 
-#ax.set_x([0, 1]) 
-#ax.tick_params(axis='both', which='major', labelsize=24,pad=1)  
-#ax.set_ylabel("Time (sec)",fontsize=16)
-#ax.set_xlabel("Offset ($\degree$)",fontsize=16)
-#ax.set_zlabel("Response (a.u)",fontsize=16)
-
-#elevation = 17  # Specify the elevation angle (in degrees)
-#azimuth = -114    # Specify the azimuth angle (in degrees)
-#elevation = 23  # Specify the elevation angle (in degrees)
-#azimuth = -59    # Specify the azimuth angle (in degrees)
 
 elevation = 24  # Specify the elevation angle (in degrees)
 azimuth = -40    # Specify the azimuth angle (in degrees)
 roll=0
 ax.view_init(elevation, azimuth,roll)
-#ax.minorticks_on()
 ax.tick_params(axis='both', length=6,width=4,direction="out")  
 
 plt.show()
 
 fig.savefig("/home/olive/Desktop/Dynamics_homo.tiff",dpi=300)
 
-
-#top=0.98,
-#bottom=0.02,
-#left=0.013,
-#right=0.987,
-#hspace=0.2,
-#wspace=0.2
-#elevation 36 aizmuth -55
-
-
 fig=plt.figure(figsize=(6,6))
 ax = plt.axes(projection='3d')
 ax._axis3don = False
-#fig, ax = plt.subplots(1,1,figsize=(8,5))   
  
-#angles1=angles[[0,4,-1]]-202.5
-#ax.set_xticks(angles[[0,4,-1]],labels=angles1.astype('int64'))
-#angles1=angles-202.5
-#ax.set_xticks(angles,labels=angles1.astype('int64'))
 x = angles
 y = tt
 X,Y= np.meshgrid(x,y)
@@ -1163,9 +1091,7 @@ xnew=np.arange(-180,135,2)
 yy=np.arange(-0.5,4,ts)
 X,Y=np.meshgrid(xnew,yy)
 
-#Z=gaussian_filter(Z.T, sigma=15,truncate=4)
     
-#Z=Z.T
 ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",linewidth=0,rstride=1, cstride=1,edgecolors=None)  # surface plot
 
  
@@ -1194,29 +1120,13 @@ ax.xaxis.pane.set_edgecolor('w')
 ax.yaxis.pane.set_edgecolor('w')
 ax.zaxis.pane.set_edgecolor('w')
  
-#ax.view_init(50, 45)
 fig.tight_layout(pad=2)  
 
 ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_zticklabels([])
-#ax.tick_params(axis='x', which='major', labelsize=24,pad=-2)  
-#ax.tick_params(axis='y', which='major', labelsize=24,pad=-2)  
-#ax.tick_params(axis='z', which='major', labelsize=24,pad=2) 
- 
-#ax.set_ylabel("Time (sec)",fontsize=24)
-#ax.set_xlabel("Offset ($\degree$)",fontsize=24)
-#ax.set_zlabel("Response (a.u)",fontsize=24)
-
-#elevation = 17  # Specify the elevation angle (in degrees)
-#azimuth = -114    # Specify the azimuth angle (in degrees)
-
-#elevation = 23  # Specify the elevation angle (in degrees)
-#azimuth = -59    # Specify the azimuth angle (in degrees)
 
 ax.view_init(elevation, azimuth,roll)
 plt.show()
 
 fig.savefig("/home/olive/Desktop/Dynamics_hetero.tiff",dpi=300)
-
-os.chdir('/media/olive/Research/oliver/scripts/')  
