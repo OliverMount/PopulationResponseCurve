@@ -45,10 +45,10 @@ This repository contains Python code for obtaining population response curves fr
 
 1. git clone the repository to a local folder in your computer
 
-2. Change into the 'scripts' folder and set the following paths in the 	'pop_decoding.py' file:
+2. Change into the `scripts` folder and set the following paths in the 	`pop_decoding.py` file:
 
 	a. data_path: This is the path where the preprocessed calcium data is stored. 
-	b. pval_pref_path: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored."
+	b. pval_pref_path: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored. If you need to now how to create csv files of pvalues and pref.dir, please refer to the R file PrefDirection.R
 
 	In our case, the csv file is in the following format
 	
