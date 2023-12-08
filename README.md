@@ -1,13 +1,7 @@
 <style>
-figure {
-text-align: center;
-}
-
-figcaption {
-display: inline-block;
-text-align: left; 
-</style>
-
+figcaption{
+text-align:center;
+</style> 
 
 # Population Response Curve
 
@@ -28,9 +22,12 @@ Fig. 1 indicates a population of tuning curve each depicts the slectivity of a n
 
 Fig. 2 show a population response curve when the stimulus index is 3. 
 
+<figure>
 <p align='center'>
 <img src="figs/Stimulus3_PopRespCur.png" width="450" height="350">
 </p>
+<figcaption> Figure 2. Population of tuning curve </figcaption>
+</figure>
 
 Fig. 3 shows a family of population response one for each stimulus.
 The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
