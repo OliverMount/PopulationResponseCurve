@@ -9,7 +9,9 @@ A population response curve in neuroscience represents the collective neural res
 Fig. 1 indicates a population of tuning curve each depicts the slectivity of a neuron. For illustration `two` nuerons per stimuls are shown. Fig. 2 show a population response curve when the stimulus index is 3. Fig. 3 shows a family of population response one for each stimulus.
 The above figures are produced using the code Illustrator.py. Feel free to increase the number of neurons per stimuls and plot the population responses.
 
-![Figure 1. Tuning curves](figs/NeuronsTuningCurves.png =100x20 "Population of Tuning Curves")
+![Figure 1.](figs/NeuronsTuningCurves.png "Population of Tuning Curves")
+![Figure 2.](figs/Stimulus3_PopRespCur.png "Population response of Stimulus 3")
+![Figure 3.](figs/NeuronsTuningCurves.png "Array of responses")
 
 
 ###  Population Response Curve based Decoding of Mean Direction using Mouse Calcium Imaging Data
