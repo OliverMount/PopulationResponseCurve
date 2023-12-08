@@ -1,3 +1,14 @@
+<style>
+figure {
+text-align: center;
+}
+
+figcaption {
+display: inline-block;
+text-align: left; 
+</style>
+
+
 # Population Response Curve
 
 A population response curve in neuroscience represents the collective neural responses  of a group of neurons plotted against varying stimulus conditions, illustrating how the overall neural population responds to different inputs Dayan and Abbot [^1]. Understanding population response curves is crucial for deciphering how neural circuits process information and respond to external stimuli, providing insights into the functioning of the nervous system. 
@@ -12,7 +23,7 @@ Fig. 1 indicates a population of tuning curve each depicts the slectivity of a n
 <p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
-<figcaption> Population of tuning curve </figcaption>
+<figcaption> Figure 1. Population of tuning curve </figcaption>
 </figure>
 
 Fig. 2 show a population response curve when the stimulus index is 3. 
