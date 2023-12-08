@@ -14,8 +14,7 @@ num_points=len(mean_values)
 
 
 colors=  ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#17becf']
-neurons_per_stimulus = 3 # Number of neruons per stimulus 
-
+neurons_per_stimulus = 2 # Number of neruons per stimulus 
 # Initialize an array to store individual neuron tuning curves
 tuning_curves = np.zeros((num_points, num_points * neurons_per_stimulus))
  
@@ -79,7 +78,7 @@ ax.set_ylim(-0.1,10)
 
 fig.tight_layout(pad=2)  
 plt.show()
-fig.savefig("/home/olive/Desktop/Stimulus4_PopRespCur.png",dpi=300) 
+fig.savefig("/home/olive/Desktop/Stimulus3_PopRespCur.png",dpi=300) 
 
 
 ###################################################
