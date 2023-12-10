@@ -105,4 +105,5 @@ This repository contains Python code for obtaining population response curves fr
 ```
 4. Individual figures for each condition are stored inside the 'plots' directory.
 
-> Note: The 'Montage' folder (that contains stitched figure files) will be recreated only if the platform is Linux (if Montage is installed).
+> [!NOTE] 
+> The 'Montage' folder (that contains stitched figure files) will be recreated only if the platform is Linux (if Montage is installed).
