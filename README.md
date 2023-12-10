@@ -1,7 +1,7 @@
 <!-- badges: start -->  
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
-![dsd](https://badgen.net/badge/hello/world/red?icon=twitter)
+![version](https://badgen.net/badge/version/1.0/red)
 [![Language: Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
 <!-- badges: end -->
 
