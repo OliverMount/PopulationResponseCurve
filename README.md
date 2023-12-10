@@ -1,6 +1,5 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-
+[![Language: Python ](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)]
 
 # Population Response Curve
 
@@ -44,7 +43,7 @@ The above figures are produced using the script `codes\Illustrator.py`. Feel fre
 This repository contains Python code for obtaining population response curves from preprocessed and epoched calcium imaging data.
  
 
-### Instruction for running the code
+### Instructions for running the code
 
 1. git clone the repository to a local folder in your computer
 
