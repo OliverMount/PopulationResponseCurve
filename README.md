@@ -12,7 +12,7 @@ Fig. 1 indicates a population of tuning curves, each depicting the selectivity o
 <p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
-<figcaption> **Figure 1. Population of tuning curves** </figcaption>
+<figcaption> ** Figure 1. Population of tuning curves ** </figcaption>
 </figure> 
 
 Fig. 2 shows a population response curve when the stimulus index is 3.
