@@ -46,8 +46,8 @@ This repository contains Python code for obtaining population response curves fr
 
 2. Change into the `scripts` folder and set the following paths in the 	`pop_decoding.py` file:
 > [!IMPORTANT] 
-> a. data_path: This is the path where the preprocessed calcium data is stored. 
-> b. pval_pref_path: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored. If you need to now how to create csv files of pvalues and pref.dir, please refer to the R file PrefDirection.R
+> a. `data_path`: This is the path where the preprocessed calcium data is stored. 
+> b. `pval_pref_path`: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored. If you need to now how to create csv files of pvalues and pref.dir, please refer to the R file PrefDirection.R
 
 	In our case, the csv file is in the following format
 	
@@ -57,7 +57,7 @@ This repository contains Python code for obtaining population response curves fr
 	| Animal.9 | PPC 135  | Hetero   | 0.09     |  1       |
 	| ...      | ...      | ...      | ...      | ...      |
 
-	If you have a CSV file with different column names, you may need to adjust the script inside the 'pop_decoding.py' file
+	If you have a CSV file with different column names, you may need to properly set the path in `pop_decoding.py` file
 
 	The directory structure with two levels of data will look like this:
 
@@ -85,7 +85,7 @@ This repository contains Python code for obtaining population response curves fr
 	    └── V1_90
 
 	```
-3. Run the 'pop_decoding.py' script; it will create a 'decoding' folder (this is the results folder) at the same level as the 'scripts' folder. The structure of the 'decoding' folder would be the following:
+3. Run the `pop_decoding.py` script; it will create a 'decoding' folder (this is the results folder) at the same level as the 'scripts' folder. The structure of the 'decoding' folder would be the following:
 
 ```
 .
