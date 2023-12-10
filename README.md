@@ -12,7 +12,7 @@ Fig. 1 indicates a population of tuning curves, each depicting the selectivity o
 <p align='center'>
 <img src="figs/NeuronsTuningCurves.png" width="450" height="350">
 </p>
-<figcaption> Figure 1. Population of tuning curves </figcaption>
+<figcaption> **Figure 1. Population of tuning curves** </figcaption>
 </figure> 
 
 Fig. 2 shows a population response curve when the stimulus index is 3.
@@ -21,7 +21,7 @@ Fig. 2 shows a population response curve when the stimulus index is 3.
 <p align='center'>
 <img src="figs/Stimulus3_PopRespCur.png" width="450" height="350">
 </p>
-<figcaption> Figure 2. Population response curve for stimulus 3 </figcaption>
+<figcaption> **Figure 2. Population response curve for stimulus 3** </figcaption>
 </figure>
 
 Fig. 3 shows a family of population response curves, one for each stimulus.
@@ -30,7 +30,7 @@ Fig. 3 shows a family of population response curves, one for each stimulus.
 <p align='center'>
 <img src="figs/All_PopRespCurs.png" width="450" height="350">
 </p>
-<figcaption> Figure 3. Family of population response curves </figcaption>
+<figcaption> **Figure 3. Family of population response curves** </figcaption>
 </figure>
 
 The above figures are produced using the script `codes\Illustrator.py`. Feel free to increase the number of neurons per stimulus and plot the population responses.
