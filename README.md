@@ -1,3 +1,10 @@
+<!-- badges: start -->  
+![version](https://badgen.net/badge/version/1.0/green)
+![Languages](https://badgen.net/badge/Languages/Python,R/green)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+<!-- badges: end -->
+
 # Population Response Curve
 
 A population response curve in neuroscience represents the collective neural responses  of a group of neurons plotted against varying stimulus conditions, illustrating how the overall neural population responds to different inputs (Dayan and Abbot [^1]). Understanding population response curves is crucial for deciphering how neural circuits process information and respond to external stimuli, providing insights into the functioning of the nervous system. 
@@ -40,14 +47,14 @@ The above figures are produced using the script `codes\Illustrator.py`. Feel fre
 This repository contains Python code for obtaining population response curves from preprocessed and epoched calcium imaging data.
  
 
-### Instruction for running the code
+### Instructions for running the code
 
 1. git clone the repository to a local folder in your computer
 
 2. Change into the `scripts` folder and set the following paths in the 	`pop_decoding.py` file:
-
-	a. data_path: This is the path where the preprocessed calcium data is stored. 
-	b. pval_pref_path: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored. If you need to now how to create csv files of pvalues and pref.dir, please refer to the R file PrefDirection.R
+> [!IMPORTANT] 
+> a. `data_path`: This is the path where the preprocessed calcium data is stored. 
+> b. `pval_pref_path`: Path to the CSV files where the p-values of the tuned and untuned neurons, as well as the preferred direction of each neuron, are stored. If you need to now how to create csv files of pvalues and pref.dir, please refer to the R file PrefDirection.R
 
 	In our case, the csv file is in the following format
 	
@@ -57,7 +64,7 @@ This repository contains Python code for obtaining population response curves fr
 	| Animal.9 | PPC 135  | Hetero   | 0.09     |  1       |
 	| ...      | ...      | ...      | ...      | ...      |
 
-	If you have a CSV file with different column names, you may need to adjust the script inside the 'pop_decoding.py' file
+	If you have a CSV file with different column names, you may need to properly set the path in `pop_decoding.py` file
 
 	The directory structure with two levels of data will look like this:
 
@@ -85,7 +92,7 @@ This repository contains Python code for obtaining population response curves fr
 	    └── V1_90
 
 	```
-3. Run the 'pop_decoding.py' script; it will create a 'decoding' folder (this is the results folder) at the same level as the 'scripts' folder. The structure of the 'decoding' folder would be the following:
+3. Run the `pop_decoding.py` script; it will create a 'decoding' folder (this is the results folder) at the same level as the 'scripts' folder. The structure of the 'decoding' folder would be the following:
 
 ```
 .
@@ -105,4 +112,5 @@ This repository contains Python code for obtaining population response curves fr
 ```
 4. Individual figures for each condition are stored inside the 'plots' directory.
 
-> Note: The 'Montage' folder (that contains stitched figure files) will be recreated only if the platform is Linux (if Montage is installed).
+> [!NOTE] 
+> The 'Montage' folder (that contains stitched figure files) will be recreated only if the platform is Linux (if Montage is installed).
