@@ -127,10 +127,15 @@ percent_data=[0,10,20,40,60,100]
 ############################  ANALYSIS FOR TASK DATA #####################################
 #########################################################################################
  
+# Custom sorting key
+def extract_number(animal):
+	return int(animal[5:-4]) # Assuming the format is 'animalX'
+
+  
 paradigm='task' 
 # mouse name order
-V1_task=['1R.mat','2L.mat','newV1.mat','Ylbd.mat','Ylbe.mat','Ylbf.mat','Ylbg.mat','2.mat',	'3.mat','4.mat']
-PPC_task=['3L.mat','3R.mat','YLbc.mat','YLcj.mat','YLck.mat','YLcl.mat','YLcm.mat']
+#V1_task=['1R.mat','2L.mat','newV1.mat','Ylbd.mat','Ylbe.mat','Ylbf.mat','Ylbg.mat','2.mat',	'3.mat','4.mat']
+#PPC_task=['3L.mat','3R.mat','YLbc.mat','YLcj.mat','YLck.mat','YLcl.mat','YLcm.mat']
 
 for roi in ROIs_hetero:   # For each heterogeneous condition
 #for roi in ['V1_45']:	
@@ -139,7 +144,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	
 	os.chdir(roi)
 	
-	ani_list=os.listdir()
+	ani_list=sorted(os.listdir(),key=extract_number)
 	print(ani_list)
 	noa=len(ani_list)
 	
@@ -148,14 +153,15 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	# load the neuron preferences and pvalue for all animals 
 	# The csv file is created in R (pls. look at the script PrefDirection.R in the scripts folder)
 	B = pd.read_csv(os.path.join(pval_pref_path, paradigm,roi+'_prefer.csv'))
-	  
-	if roi.startswith('V1'):
-		list_for_sorting=V1_task
-	else:
-		list_for_sorting=PPC_task 
 	
-	ani_list=[[file for file in ani_list if file.lower().endswith(suffix.lower())] for suffix in list_for_sorting]
-	ani_list= [ani[0] for ani in ani_list] 
+	
+	#if roi.startswith('V1'):
+	#	list_for_sorting=V1_task
+	#else:
+	#	list_for_sorting=PPC_task 
+	
+	#ani_list=[[file for file in ani_list if file.lower().endswith(suffix.lower())] for suffix in list_for_sorting]
+	#ani_list= [ani[0] for ani in ani_list] 
 	 
 	for p in range(len(ani_list)):   # For each animal
 		# load that animal data in homo and hetero group  
@@ -348,8 +354,8 @@ for roi in ROIs_hetero:   # For each condition
 
 paradigm='passive' 
 # mouse name order
-V1_passive=['1L.mat','1R.mat','2L.mat','Ylce.mat','Ylcf.mat','Ylcg.mat']
-PPC_passive=['3L.mat','3R.mat','Ylcb.mat', 'Ylch.mat','Ylci.mat','YLck.mat','Ylcl.mat','Ylcm.mat']
+#V1_passive=['1L.mat','1R.mat','2L.mat','Ylce.mat','Ylcf.mat','Ylcg.mat']
+#PPC_passive=['3L.mat','3R.mat','Ylcb.mat', 'Ylch.mat','Ylci.mat','YLck.mat','Ylcl.mat','Ylcm.mat']
 
 for roi in ROIs_hetero:   # For each heterogeneous condition
 	os.chdir(data_path_passive)
@@ -357,7 +363,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	
 	os.chdir(roi)
 	
-	ani_list=os.listdir()
+	ani_list=sorted(os.listdir(),key=extract_number)
 	print(ani_list)
 	noa=len(ani_list)
 	
@@ -366,13 +372,13 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	# load the neuron preferences and pvalue for all animals 
 	B = pd.read_csv(os.path.join(pval_pref_path, paradigm,roi+'_prefer_passive.csv'))
 	  
-	if roi.startswith('V1'):
-		list_for_sorting=V1_passive
-	else:
-		list_for_sorting=PPC_passive 
+	#if roi.startswith('V1'):
+	#	list_for_sorting=V1_passive
+	#else:
+	#	list_for_sorting=PPC_passive 
 	
-	ani_list=[[file for file in ani_list if file.lower().endswith(suffix.lower())] for suffix in list_for_sorting]
-	ani_list= [ani[0] for ani in ani_list] 
+	#ani_list=[[file for file in ani_list if file.lower().endswith(suffix.lower())] for suffix in list_for_sorting]
+	#ani_list= [ani[0] for ani in ani_list] 
 	 
 	for p in range(len(ani_list)):   # For each animal
 		# load that animal data in homo and hetero group  
@@ -573,6 +579,10 @@ for roi in ROIs_hetero:  # for each roi
 		sig1=A_task[:,:,0]  # homo  # no. mouse X no. time points X (homo or hetero)
 		sig2=A_task[:,:,1]  # hetero   
 		
+		sig1=sig1-np.mean(sig1[:,17:19])
+		sig2=sig2-np.mean(sig2[:,17:19])
+		
+		
 		fig, ax = plt.subplots(1,1,figsize=(7,7))	
 		# plot the mean and error bar
 		ax.plot(tt,np.mean(sig1,0),'r-',tt,np.mean(sig2,0),'b-',linewidth=plt_lwd) 
@@ -703,6 +713,8 @@ for roi in ROIs_hetero:  # for each roi
 		sig1=A_passive[:,:,0]  # homo  # no. mouse X no. time points X (homo or hetero)
 		sig2=A_passive[:,:,1]  # hetero	
  
+		sig1=sig1-np.mean(sig1[:,17:19])
+		sig2=sig2-np.mean(sig2[:,17:19])
 		 
 		# plot the mean and error bar
 		ax.plot(tt,np.mean(sig1,0),'r--',tt,np.mean(sig2,0),'b--',linewidth=plt_lwd) 
@@ -966,8 +978,8 @@ if is_montage_installed():
  
 	fname='montages/Summary_PPC.png'
 	status=os.system('montage Summary_PPC_45.png  Summary_PPC_90.png  Summary_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
-    
-     
+	
+	 
 ### Plotting the time-resolved dynamics in  Fig. 3C 
 
 
@@ -977,19 +989,19 @@ roll=0
 
 
 def func_mat(y):
-    
-    ns,nt=y.shape
-    x=np.arange(22.5,360,45)-202.5
-    xnew=np.arange(-180,135,2)
-    
-    res=[]
-    
-    for k in range(nt):
-        func=interp1d(x,np.squeeze(y[:,k]),kind='cubic')
-        res.append(func(xnew))
-        
-    return np.stack(res,-1)
-        
+	
+	ns,nt=y.shape
+	x=np.arange(22.5,360,45)-202.5
+	xnew=np.arange(-180,135,2)
+	
+	res=[]
+	
+	for k in range(nt):
+		func=interp1d(x,np.squeeze(y[:,k]),kind='cubic')
+		res.append(func(xnew))
+		
+	return np.stack(res,-1)
+		
 # Retrieveing the population tuning curves (for homo and hetero cases) 
 
 os.chdir('/media/olive/Research/oliver/IEMdecodingForCalciumData/pop_decoding/tuning_curves/task/V1_135/40')
@@ -999,14 +1011,14 @@ flist=os.listdir()
 homo=[] 
 hetero=[]
 for k in flist:
-    
-    A=np.load(k)
-    B=zero_center_the_tcs(A,shift=wrap_around)
-    
-    homo.append(B[:,0,:])   # homo (all mouse)
-    hetero.append(B[:,1,:]) #hetero (all mouse)
+	
+	A=np.load(k)
+	B=zero_center_the_tcs(A,shift=wrap_around)
+	
+	homo.append(B[:,0,:])   # homo (all mouse)
+	hetero.append(B[:,1,:]) #hetero (all mouse)
  
-homo=np.mean(np.stack(homo,-1),-1)    # mean across mouse
+homo=np.mean(np.stack(homo,-1),-1)	# mean across mouse
 hetero=np.mean(np.stack(hetero,-1),-1) # mean across mouse
 
 
@@ -1037,10 +1049,10 @@ yy=np.arange(-0.5,4,ts)
 X,Y=np.meshgrid(xnew,yy)
 
 ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",
-                linewidth=0,
-                rstride=1,
-                cstride=1,
-                edgecolors=None)  # surface plot
+				linewidth=0,
+				rstride=1,
+				cstride=1,
+				edgecolors=None)  # surface plot
 
 ax.set_xlim(-180,180)
 ax.set_ylim(-0.5,4)
@@ -1053,8 +1065,8 @@ ax.set_zticklabels([])
 
 tmp_planes = ax.zaxis._PLANES 
 ax.zaxis._PLANES = ( tmp_planes[1], tmp_planes[1], 
-                     tmp_planes[1], tmp_planes[1], 
-                     tmp_planes[1], tmp_planes[1])
+					 tmp_planes[1], tmp_planes[1], 
+					 tmp_planes[1], tmp_planes[1])
 
 
 #ax.set_frame_on(False)
@@ -1069,7 +1081,7 @@ ax.zaxis.pane.set_edgecolor('w')
 fig.tight_layout(pad=2)  
 
 elevation = 24  # Specify the elevation angle (in degrees)
-azimuth = -40    # Specify the azimuth angle (in degrees)
+azimuth = -40	# Specify the azimuth angle (in degrees)
 roll=0
 ax.view_init(elevation, azimuth,roll)
 ax.tick_params(axis='both', length=6,width=4,direction="out")  
@@ -1091,7 +1103,7 @@ xnew=np.arange(-180,135,2)
 yy=np.arange(-0.5,4,ts)
 X,Y=np.meshgrid(xnew,yy)
 
-    
+	
 ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",linewidth=0,rstride=1, cstride=1,edgecolors=None)  # surface plot
 
  
@@ -1109,8 +1121,8 @@ ax.set_zticklabels([])
 
 tmp_planes = ax.zaxis._PLANES   # what is this temp_planes?
 ax.zaxis._PLANES = ( tmp_planes[1], tmp_planes[1], 
-                     tmp_planes[1], tmp_planes[1], 
-                     tmp_planes[1], tmp_planes[1])
+					 tmp_planes[1], tmp_planes[1], 
+					 tmp_planes[1], tmp_planes[1])
 
 ax.xaxis.pane.fill = False
 ax.yaxis.pane.fill = False
