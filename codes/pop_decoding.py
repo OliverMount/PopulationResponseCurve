@@ -89,6 +89,10 @@ Gaussian_smoothening_needed=False
 time_resolved_tuning_desired=False
 iteration_included=False
 
+baseline_correction_needed=True
+if baseline_correction_needed:
+	base_idx=np.arange(17,20)
+
 nt=120   # 120 time-points for 20 Hz
 
 # parameters for cluster computation
@@ -204,6 +208,11 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		hetero_data=A['sample_data_hetero']
 		hetero_data =hetero_data.transpose(1,0,2)  
 		
+		
+		if baseline_correction_needed:
+			homo_data -= np.mean(homo_data[:, :, base_idx], axis=-1, keepdims=True)
+			hetero_data -= np.mean(hetero_data[:, :, base_idx], axis=-1, keepdims=True)
+ 
 		# homo and hetero data labels
 		homo_labels=np.squeeze(A['dirIdx_homo'])  
 		hetero_labels=np.squeeze(A['dirIdx_hetero'])  
@@ -418,8 +427,12 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		homo_data=homo_data.transpose(1,0,2)   #for decoding:  units X trials X time-pts  
 		
 		hetero_data=A['sample_data_hetero']
-		hetero_data =hetero_data.transpose(1,0,2)  
+		hetero_data =hetero_data.transpose(1,0,2)   
 		
+		if baseline_correction_needed:
+			homo_data -= np.mean(homo_data[:, :, base_idx], axis=-1, keepdims=True)
+			hetero_data -= np.mean(hetero_data[:, :, base_idx], axis=-1, keepdims=True)
+  
 		# homo and hetero data labels
 		homo_labels=np.squeeze(A['dirIdx_homo'])  
 		hetero_labels=np.squeeze(A['dirIdx_hetero'])  
@@ -578,11 +591,14 @@ for roi in ROIs_hetero:  # for each roi
 		# For task (solid lines) 
 		A_task=np.load(os.path.join(decoding_res_slopes_path,paradigm,roi,str(pp),'slopes.npy'))
 		
+		#A_task[:,:,0]=A_task[:,:,0]-np.mean(A_task[:,17:19,0])
+		#A_task[:,:,1]=A_task[:,:,1]-np.mean(A_task[:,17:19,1])
+		
 		sig1=A_task[:,:,0]  # homo  # no. mouse X no. time points X (homo or hetero)
 		sig2=A_task[:,:,1]  # hetero   
 		
-		sig1=sig1-np.mean(sig1[:,17:19])
-		sig2=sig2-np.mean(sig2[:,17:19])
+		#sig1=sig1-np.mean(sig1[:,17:19])
+		#sig2=sig2-np.mean(sig2[:,17:19])
 		
 		
 		fig, ax = plt.subplots(1,1,figsize=(7,7))	
@@ -710,11 +726,14 @@ for roi in ROIs_hetero:  # for each roi
 		paradigm='passive'
 		A_passive=np.load(os.path.join(decoding_res_slopes_path,paradigm,roi,str(pp),'slopes.npy'))
 		
+		#A_passive[:,:,0]=A_passive[:,:,0]-np.mean(A_passive[:,17:19,0])
+		#A_passive[:,:,1]=A_passive[:,:,1]-np.mean(A_passive[:,17:19,1])
+		
 		sig1=A_passive[:,:,0]  # homo  # no. mouse X no. time points X (homo or hetero)
 		sig2=A_passive[:,:,1]  # hetero	
  
-		sig1=sig1-np.mean(sig1[:,17:19])
-		sig2=sig2-np.mean(sig2[:,17:19])
+		#sig1=sig1-np.mean(sig1[:,17:19])
+		#sig2=sig2-np.mean(sig2[:,17:19])
 		 
 		# plot the mean and error bar
 		ax.plot(tt,np.mean(sig1,0),'r--',tt,np.mean(sig2,0),'b--',linewidth=plt_lwd) 
@@ -779,8 +798,7 @@ for roi in ROIs_hetero:  # for each roi
 				clus.extend(clusters[p])
 				p=p+1
 			else:
-				p=p+1 
-				
+				p=p+1  
 		
 				
 		if len(clus): 
@@ -913,6 +931,8 @@ if is_montage_installed():
 else:
 	print_status('Montage NOT installed in your computer. Skipping...') 
  
+ 
+## Make the Final.csv in R first
   
 # Plot the summary of the slopes 
 import matplotlib.pyplot as plt
@@ -979,7 +999,7 @@ if is_montage_installed():
 	fname='montages/Summary_PPC.png'
 	status=os.system('montage Summary_PPC_45.png  Summary_PPC_90.png  Summary_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
 	
-	 
+""" 
 ### Plotting the time-resolved dynamics in  Fig. 3C 
 
 
@@ -1142,3 +1162,4 @@ ax.view_init(elevation, azimuth,roll)
 plt.show()
 
 fig.savefig("/home/olive/Desktop/Dynamics_hetero.tiff",dpi=300)
+"""
