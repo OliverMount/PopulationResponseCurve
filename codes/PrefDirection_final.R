@@ -136,3 +136,4 @@ for (cond in conds){   # for each condition
   row.names(df)<- 1:nrow(df)
   write.csv(df,file=file.path(base_path,paradigm,paste0(cond_name,'_prefer_passive.csv')))
 } 
+

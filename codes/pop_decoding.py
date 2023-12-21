@@ -23,7 +23,9 @@ import matplotlib.pyplot as plt
 matplotlib.rcParams['axes.linewidth'] = 2
 
 # Load local modules 
-os.chdir('codes/')
+
+os.chdir('/media/olive/Research/oliver/IEMdecodingForCalciumData/scripts')
+ 
 sys.path.append(os.getcwd())
 from utils import *	 # it imports population response curve making methods
 
@@ -642,9 +644,7 @@ for roi in ROIs_hetero:  # for each roi
 				clus.extend(clusters[p])
 				p=p+1
 			else:
-				p=p+1 
-		
-	 
+				p=p+1   
 				
 		if len(clus): 
 			clus=np.concatenate(clus)
