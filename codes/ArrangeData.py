@@ -2,11 +2,49 @@
 
 import os
 import scipy
+import numpy as np
 
 
+raw_data_path='/media/olive/Research/oliver/data_down/given_raw';
 data_save_path='/media/olive/Research/oliver/data_down/';
-paradigm=['task','passive']
+pval_save_path='/media/olive/Research/oliver/pvals/';
+paradigms=['task','passive']
 conds=['V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135']
+ 
+
+
+
+
+for paradigm in paradigms:
+    os.chdir(os.path.join(raw_data_path,paradigm))
+    for cond in conds:
+        
+        homo_pval=[]
+        hetero_pval=[]
+        
+        A=scipy.io.loadmat(cond+'.mat')
+        
+        
+        # deal with the p-value
+        homo= A['pVal_homo']
+        hetero= A['pVal_hetero']
+        
+        homo_data=A['data_homo_all']
+        hetero_data=A['data_hetero_all']
+        
+        
+        for k in range(len(homo)):
+            if homo[k][0][0].size:  # if there is a meaningful data
+                homo_pval.append(np.squeeze(homo[k][0][0][0]))
+                hetero_pval.append(np.squeeze(hetero[k][0][0][0]))   
+                
+    # Saving the p-values            
+    scipy.io.savemat(os.path.join(pval_save_path,paradigm,cond+'.mat'), {'homo' : homo_pval,'hetero' : hetero_pval})
+        
+     
+    #saving the data values
+        
+        
 
 
 
