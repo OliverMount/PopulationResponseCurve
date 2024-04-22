@@ -12,7 +12,7 @@ library(gridExtra)
 library(reshape2)
 library(ggpubr) 
 
-save_path='/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/' 
+save_path='/media/olive/Research/Gitrepo/PopulationResponseCurve/fig_data/' 
 setwd('/media/olive/Research/oliver/pop_slopes/task')
 flist<-list.files(getwd())
 
@@ -73,23 +73,45 @@ df<- rbind(df_task,df_passive)
 df_new <-  df %>% pivot_longer(cols = c("Homo","Hetero"), 
                                values_to = "slopes")
 
-
+write.csv(df_new ,file=paste0(save_path,'significant.csv')) 
 
  
 df_new$Condition<- factor(df_new$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
                       labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
                       ordered = TRUE)
+df_new$name<- factor(df_new$name,levels = c("Homo","Hetero"),
+                     labels =  c("Homo","Hetero"),
+                     ordered = TRUE)
 
 
 df_new$Percent<- factor(df_new$Percent,levels = c("0","10","20","40","60","100"))
 
-#Calculate mean and standard error
-mean_data_task <- df %>%
-  group_by(Condition, Percent,variable) %>%
-  summarize(mean_value = mean(value),
-            sd_value = sd(value),
+#task passive
+df_task_passive <- df_new %>%
+  group_by(paradigm,Condition, Percent) %>%
+  summarize(mean_value = mean(slopes),
+            sd_value = sd(slopes),
             se_value = sd_value / sqrt(n()))
+write.csv(df_task_passive ,file=paste0(save_path,'task_passive.csv')) 
+
+
+#homo- hetero
+df_ho_het <- df_new %>%
+  group_by(name,Condition, Percent) %>%
+  summarize(mean_value = mean(slopes),
+            sd_value = sd(slopes),
+            se_value = sd_value / sqrt(n()))
+
+
+write.csv(df_ho_het ,file=paste0(save_path,'homo_hetero.csv')) 
+
+
+
+
+
+
 my_colors <- c( "red",  "blue")
+
 # Plot using ggplot
 p <- ggplot(mean_data_task, aes(x = Percent, y = mean_value, group=variable, color = variable)) +
   geom_line()+
