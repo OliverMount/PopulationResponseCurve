@@ -76,10 +76,12 @@ df_new <-  df %>% pivot_longer(cols = c("Homo","Hetero"),
 
 
  
-df$Condition<- factor(df$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
+df_new$Condition<- factor(df_new$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
                       labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
                       ordered = TRUE)
-df$Percent<- factor(df$Percent,levels = c("0","10","20","40","60","100"))
+
+
+df_new$Percent<- factor(df_new$Percent,levels = c("0","10","20","40","60","100"))
 
 #Calculate mean and standard error
 mean_data_task <- df %>%
