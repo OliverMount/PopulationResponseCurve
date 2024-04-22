@@ -5,7 +5,7 @@ import scipy
 import numpy as np
 
 
-raw_data_path='/media/olive/Research/oliver/data_down/given_base';
+raw_data_path='/media/olive/Research/oliver/data_down/given_raw';
 data_save_path='/media/olive/Research/oliver/data_down/';
 pval_save_path='/media/olive/Research/oliver/pvals/';
 paradigms=['task','passive']
