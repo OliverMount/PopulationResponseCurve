@@ -1,3 +1,5 @@
+# Testing the shapes of old and new data sets
+
 import numpy as np
 import scipy 
 import os
