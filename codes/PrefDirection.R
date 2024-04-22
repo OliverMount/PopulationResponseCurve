@@ -113,10 +113,12 @@ for (cond in conds){   # for each condition
   
   for (k in 1:L){  # for each animal   
     
-    ho_p<- as.numeric(unlist(B$homo[[k]][[1]][[1]]))
+    #ho_p<- as.numeric(unlist(B$homo[[k]][[1]][[1]]))
+    ho_p<- as.numeric(unlist(B$homo[[k]]))
     Lf_homo<- length(ho_p) 
     
-    he_p<-  as.numeric(unlist(B$hetero[[k]][[1]][[1]]))
+    #he_p<-  as.numeric(unlist(B$hetero[[k]][[1]][[1]]))
+    he_p<-  as.numeric(unlist(B$hetero[[k]]))
     Lf_hetero<- length(he_p) 
     
     cat(' Homo:  ' , Lf_homo , ' Hetero: ' ,Lf_hetero, ' \n' )
@@ -128,8 +130,7 @@ for (cond in conds){   # for each condition
     
     homo<-hetero<- rep(0,Lf) 
     
-    # For homo
-    
+    # For homo 
     temp<-data.frame(Sub=rep(paste0("Animal.",k),Lf),
                      Condition=rep(cond_name,Lf),
                      Group=rep("homo",Lf),
