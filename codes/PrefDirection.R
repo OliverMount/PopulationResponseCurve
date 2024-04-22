@@ -29,8 +29,8 @@ for (cond in conds){   # for each condition
    
   # loading the p-value file
   B<- readMat(file.path(pval_path,paradigm,cond))
-  B$homo<- Filter(Negate(is.null), B$homo)
-  B$hetero<- Filter(Negate(is.null),B$hetero)
+  #B$homo<- Filter(Negate(is.null), B$homo)  
+  #B$hetero<- Filter(Negate(is.null),B$hetero)
   
   L<- length(B$homo)  # No. of animals here
   
@@ -43,11 +43,13 @@ for (cond in conds){   # for each condition
   
   cat('Cond name  : ', cond_name, '\n')
   for (k in 1:L){  # for each animal   
-      ho_p<- as.numeric(unlist(B$homo[[k]][[1]][[1]]))
+      #ho_p<- as.numeric(unlist(B$homo[[k]][[1]][[1]]))
+      ho_p<- as.numeric(unlist(B$homo[[k]]))
       Lf_homo<- length(ho_p)
       
       
-      he_p<-  as.numeric(unlist(B$hetero[[k]][[1]][[1]]))
+      #he_p<-  as.numeric(unlist(B$hetero[[k]][[1]][[1]]))
+      he_p<-  as.numeric(unlist(B$hetero[[k]]))
       Lf_hetero<- length(he_p) 
       
       
