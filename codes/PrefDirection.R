@@ -29,7 +29,7 @@ for (cond in conds){   # for each condition
    
   # loading the p-value file
   B<- readMat(file.path(pval_path,paradigm,cond))
-  #B$homo<- Filter(Negate(is.null), B$homo)  
+  #B$homo<- Filter(Negate(is.null), B$homo) # already negated in python
   #B$hetero<- Filter(Negate(is.null),B$hetero)
   
   L<- length(B$homo)  # No. of animals here
@@ -100,8 +100,8 @@ for (cond in conds){   # for each condition
   cat('Cond name  : ', cond_name, '\n')
   # loading the p-value file
   B<- readMat(cond)
-  B$homo<- Filter(Negate(is.null), B$homo)
-  B$hetero<- Filter(Negate(is.null),B$hetero) 
+  #B$homo<- Filter(Negate(is.null), B$homo) # already negated in python
+  #B$hetero<- Filter(Negate(is.null),B$hetero) 
   
   L<- length(B$homo)  # No. of animals here
   
