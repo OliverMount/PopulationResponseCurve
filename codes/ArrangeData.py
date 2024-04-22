@@ -18,7 +18,7 @@ for paradigm in paradigms:
     for cond in conds:
         
         homo_pval=[]
-        hetero_pval=[]
+        hetero_pval=[] 
         
         A=scipy.io.loadmat(cond+'.mat')
         
@@ -29,6 +29,10 @@ for paradigm in paradigms:
         
         homo_data=A['data_homo_all']
         hetero_data=A['data_hetero_all']
+        
+        homo_labels=A['dir_homo_all']
+        hetero_labels=A['dir_hetero_all']
+        
         
         count=1
         for k in range(len(homo)):
@@ -41,9 +45,12 @@ for paradigm in paradigms:
                 homo_pval.append(np.squeeze(homo[k][0][0][0]))
                 hetero_pval.append(np.squeeze(hetero[k][0][0][0]))  
                 
+                
+                
+                
                 # Removing the empty data sets
                 #saving the data values
-                scipy.io.savemat(os.path.join(data_save_path,paradigm,cond,mouse_name), {'sample_data_homo' : homo_data[k][0]})
+                scipy.io.savemat(os.path.join(data_save_path,paradigm,cond,mouse_name), {'sample_data_homo' : homo_data[k][0],'sample_data_hetero' : hetero_data[k][0],'dirIdx_homo' : homo_labels[k][0][0] ,'dirIdx_hetero': hetero_labels[k][0][0] })
                 
                 count=count+1
                 
