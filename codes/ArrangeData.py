@@ -45,8 +45,7 @@ for paradigm in paradigms:
                 homo_pval.append(np.squeeze(homo[k][0][0][0]))
                 hetero_pval.append(np.squeeze(hetero[k][0][0][0]))  
                 
-                
-                
+                 
                 
                 # Removing the empty data sets
                 #saving the data values
