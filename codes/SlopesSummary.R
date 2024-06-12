@@ -17,8 +17,10 @@ setwd('/media/olive/Research/oliver/pop_slopes/task')
 flist<-list.files(getwd())
 
 rois<-c('V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135') 
-percents<-c('0','10','20','40','60','100')
- 
+#percents<-c('0','10','20','40','60','100')
+#percents<-c('0','10','25','50','100')
+percents<-c('0','10','50','100')
+
 df<-data.frame(Condition=rep(NA,1),
                Percent=rep(NA,1),
                Homo=rep(NA,1), 
@@ -43,7 +45,7 @@ df<-melt(df)
 df$Condition<- factor(df$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
                       labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
                       ordered = TRUE)
-df$Percent<- factor(df$Percent,levels = c("0","10","20","40","60","100"))
+df$Percent<- factor(df$Percent,levels =percents)
  
 #Calculate mean and standard error
 mean_data_task <- df %>%
@@ -83,7 +85,7 @@ setwd('/media/olive/Research/oliver/pop_slopes/passive/')
 flist<-list.files(getwd())
 
 rois<-c('V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135') 
-percents<-c('0','10','20','40','60','100')
+ 
 
 df<-data.frame(Condition=rep(NA,1),Percent=rep(NA,1),Homo=rep(NA,1), Hetero=rep(NA,1))
 
@@ -106,7 +108,7 @@ df<-melt(df)
 df$Condition<- factor(df$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
                       labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
                       ordered = TRUE)
-df$Percent<- factor(df$Percent,levels = c("0","10","20","40","60","100"))
+df$Percent<- factor(df$Percent,levels = percents)
 
 #Calculate mean and standard error
 mean_data_passive <- df %>%
@@ -157,81 +159,81 @@ p <- ggplot(final, aes(x = Percent, y = mean_value,
 print(p) 
 write.csv(final,file=paste0(save_path,'final.csv')) 
 
-### IEM decoding
-
-setwd('~/Desktop/res/task/')
-flist<-list.files(getwd())
-
-rois<-c('V1','PPC')
-conds<-c('45','90','135')
-percents<-c('10','20','40','60','100')
-
-
-df<-data.frame(Condition=rep(NA,1),Percent=rep(NA,1),Homo=rep(NA,1), Hetero=rep(NA,1))
-
-for (roi in rois){
-  for(cond in conds){
-    for (percent in percents){
-      
-      cond_name=paste0(roi,'_',cond)
-      fname<-paste0(roi,'_',cond,'_',percent,'.csv') 
-      temp<-read.csv(fname) 
-      colnames(temp)<-c("Homo","Hetero")
-      temp$Condition<- rep(cond_name,nrow(temp))
-      temp$Percent<-rep(percent,nrow(temp))
-      df<- rbind(df,temp)  
-      
-    }  
-  } 
-}
-
-df<-na.omit(df)
-write.csv(df,file=paste0(save_path,'slopes.csv')) 
-
-
-df<-melt(df)
-df$Condition<- factor(df$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
-                      labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
-                      ordered = TRUE)
-df$Percent<- factor(df$Percent,levels = c("10","20","40","60","100"))
-
-
-#Calculate mean and standard error
-mean_data <- df %>%
-  group_by(Condition, Percent,variable) %>%
-  summarize(mean_value = mean(value),
-            sd_value = sd(value),
-            se_value = sd_value / sqrt(n()))
-
-
-p <- ggplot(mean_data, aes(x = Percent, y = mean_value, group=variable,color= variable)) +
-  geom_line()+
-  geom_point()+
-  #geom_boxplot(position = "dodge",outlier.color = "red",
-  #             outlier.shape = NA) + 
-  #geom_jitter(width=0.1,alpha=1,size=1,color="black",shape=21,fill="grey")+
-  #stat_summary(fun=mean, geom='point', shape=23, size=3,
-  #             color="black",fill="magenta",alpha=0.7)+
-  geom_errorbar(aes(ymin=mean_value-se_value,ymax=mean_value+se_value),width=.2,
-                position=position_dodge(0.05))+
-  theme_classic()+
-  theme(legend.position = "top",
-        axis.ticks.length.x = unit(3, 'mm'),
-        axis.ticks.length.y = unit(3, 'mm'),
-        axis.text = element_text(size = 20),
-        axis.title.x = element_text(size = 24),
-        axis.title.y = element_text(size = 24),
-        plot.title = element_text(size = 24, hjust = 0.5),
-        legend.title = element_blank(),
-        legend.text = element_text(size=24),
-        strip.text.x = element_text(size = 24)) +
-  facet_wrap(~Condition, scales = "free_y") +
-  labs(x = "Percentage of cells for decoding after sorting (tuned-->untuned)", y = "Average slope") +
-  scale_y_continuous(breaks = seq(0, 0.28, 0.05), limits = c(-0.001, 0.28),
-                     expand = c(0, 0))+
-  scale_color_manual(values = my_colors)
-
-# Print the plot
-print(p) 
-
- 
+# ### IEM decoding
+# 
+# setwd('~/Desktop/res/task/')
+# flist<-list.files(getwd())
+# 
+# rois<-c('V1','PPC')
+# conds<-c('45','90','135')
+# percents<-c('10','20','40','60','100')
+# 
+# 
+# df<-data.frame(Condition=rep(NA,1),Percent=rep(NA,1),Homo=rep(NA,1), Hetero=rep(NA,1))
+# 
+# for (roi in rois){
+#   for(cond in conds){
+#     for (percent in percents){
+#       
+#       cond_name=paste0(roi,'_',cond)
+#       fname<-paste0(roi,'_',cond,'_',percent,'.csv') 
+#       temp<-read.csv(fname) 
+#       colnames(temp)<-c("Homo","Hetero")
+#       temp$Condition<- rep(cond_name,nrow(temp))
+#       temp$Percent<-rep(percent,nrow(temp))
+#       df<- rbind(df,temp)  
+#       
+#     }  
+#   } 
+# }
+# 
+# df<-na.omit(df)
+# write.csv(df,file=paste0(save_path,'slopes.csv')) 
+# 
+# 
+# df<-melt(df)
+# df$Condition<- factor(df$Condition,levels = c("V1_45","V1_90","V1_135","PPC_45","PPC_90","PPC_135"),
+#                       labels = c("V1 45","V1 90","V1 135","PPC 45","PPC 90","PPC 135"),
+#                       ordered = TRUE)
+# df$Percent<- factor(df$Percent,levels = c("10","20","40","60","100"))
+# 
+# 
+# #Calculate mean and standard error
+# mean_data <- df %>%
+#   group_by(Condition, Percent,variable) %>%
+#   summarize(mean_value = mean(value),
+#             sd_value = sd(value),
+#             se_value = sd_value / sqrt(n()))
+# 
+# 
+# p <- ggplot(mean_data, aes(x = Percent, y = mean_value, group=variable,color= variable)) +
+#   geom_line()+
+#   geom_point()+
+#   #geom_boxplot(position = "dodge",outlier.color = "red",
+#   #             outlier.shape = NA) + 
+#   #geom_jitter(width=0.1,alpha=1,size=1,color="black",shape=21,fill="grey")+
+#   #stat_summary(fun=mean, geom='point', shape=23, size=3,
+#   #             color="black",fill="magenta",alpha=0.7)+
+#   geom_errorbar(aes(ymin=mean_value-se_value,ymax=mean_value+se_value),width=.2,
+#                 position=position_dodge(0.05))+
+#   theme_classic()+
+#   theme(legend.position = "top",
+#         axis.ticks.length.x = unit(3, 'mm'),
+#         axis.ticks.length.y = unit(3, 'mm'),
+#         axis.text = element_text(size = 20),
+#         axis.title.x = element_text(size = 24),
+#         axis.title.y = element_text(size = 24),
+#         plot.title = element_text(size = 24, hjust = 0.5),
+#         legend.title = element_blank(),
+#         legend.text = element_text(size=24),
+#         strip.text.x = element_text(size = 24)) +
+#   facet_wrap(~Condition, scales = "free_y") +
+#   labs(x = "Percentage of cells for decoding after sorting (tuned-->untuned)", y = "Average slope") +
+#   scale_y_continuous(breaks = seq(0, 0.28, 0.05), limits = c(-0.001, 0.28),
+#                      expand = c(0, 0))+
+#   scale_color_manual(values = my_colors)
+# 
+# # Print the plot
+# print(p) 
+# 
+#  
