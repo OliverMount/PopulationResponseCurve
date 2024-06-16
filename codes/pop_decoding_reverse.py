@@ -51,7 +51,7 @@ data_path_task =  os.path.join(data_path,paradigm)
 paradigm = 'passive' 
 data_path_passive =   os.path.join(data_path,paradigm)
 
-decoding_res_path = '/media/olive/Research/oliver/decoding/pop_decoding/' 
+decoding_res_path = '/media/olive/Research/oliver/decoding/pop_decoding_reverse/' 
 decoding_res_data_path=os.path.join(decoding_res_path,'tuning_curves')
 decoding_res_fig_path=os.path.join(decoding_res_path ,'plots')  
 decoding_res_slopes_path=os.path.join(decoding_res_path ,'slopes') 
@@ -137,7 +137,8 @@ for k in ROIs_hetero:
 # Percentage of cells to use for decoding (tuned + % of untuned cells)
 #percent_data=[0,10,20,40,60,100]	 
 #percent_data=[0,10,25,50,100]
-percent_data=[0,10,50,100]
+#percent_data=[0,10,50,100]
+pvals_threshold=[0.95,0.50,0.10,0.05,0]
 #########################################################################################
 ############################  ANALYSIS FOR TASK DATA #####################################
 #########################################################################################
@@ -198,22 +199,22 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		df_hetero.reset_index(drop=True, inplace=True)  # reset the indices
 		 
 		# arrange accoring to the p-value first
-		idx_homo=np.argsort(df_homo['Pvalue'])
+		idx_homo=np.argsort(-df_homo['Pvalue'])  # decending order of sort
 		df_homo_sorted=df_homo.loc[idx_homo]
 		df_hetero_sorted=df_hetero.loc[idx_homo] 
 		 
 		# to get a data frame that is tuned in both the condition
 		# finding indices that match both conditions
-		final=pd.merge(df_homo_sorted[df_homo_sorted['Pvalue'] <= 0.05], df_hetero_sorted[df_hetero_sorted['Pvalue'] <= 0.05], left_index=True, right_index=True)
-		TunedIndices=final.index.to_numpy() 
+		#final=pd.merge(df_homo_sorted[df_homo_sorted['Pvalue'] <= 0.05], df_hetero_sorted[df_hetero_sorted['Pvalue'] <= 0.05], left_index=True, right_index=True)
+		#TunedIndices=final.index.to_numpy() 
 		
 		
 		# pref_df in only for tuned-tuned
-		pref_df = final[['Preference_x','Preference_y']]
-		pref_df = pref_df.copy()  # to avoid the copy warnings
-		pref_df['Neuron'] = final.index.to_list()
-		pref_df.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'}, inplace=True)
-		pref_df.reset_index(drop=True, inplace=True) 
+		#pref_df = final[['Preference_x','Preference_y']]
+		#pref_df = pref_df.copy()  # to avoid the copy warnings
+		#pref_df['Neuron'] = final.index.to_list()
+		#pref_df.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'}, inplace=True)
+		#pref_df.reset_index(drop=True, inplace=True) 
 		 
 		print_status('Dealing with the animal ' + ani_list[p])
 		
@@ -251,7 +252,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		hetero_labels=hetero_labels[idx]
 		hetero_data=hetero_data[:,idx,:] 
 		
-		for pp in percent_data: 
+		for pp in pvals_threshold: 
 		
 			path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
 			create_dir(path_name)
@@ -261,40 +262,42 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 
 				# Get the indices of the other neurons and use them for decoding
 				# Only homo data is enough to sort out the neurons
-				# as we always choose homotuned neurons and choose the same in the 
+				# as we always choose homo tuned neurons and choose the same in the 
 				# hetero condition
-				if pp!=0:  # Other than tuned on both homo and hetero 
+				#if pp!=0:  # Other than tuned on both homo and hetero 
 					 
 					 
-					# first remove the tuned tuned one from the original df
-					df_homo_sorted_pp=df_homo_sorted.drop(TunedIndices) 
-					df_hetero_sorted_pp=df_hetero_sorted.drop(TunedIndices)
-					
+				# first remove the tuned tuned one from the original df
+				df_homo_pp=df_homo[df_homo['Pvalue']>pp] 
+				#df_hetero_pp=df_hetero[df_homo['Pvalue']>pp]
+                
+				homo_indices=df_homo_pp.index.to_numpy()
+				#hetero_indices=df_hetero_pp['Unnamed: 0'].to_numpy()					
 					# additional neurons
-					nper_cells = int(np.ceil((pp/100)*df_homo_sorted_pp.shape[0])) # get the number of cells 
+					#nper_cells = int(np.ceil((pp/100)*df_homo_sorted_pp.shape[0])) # get the number of cells 
 					
-					additional_neurons=df_homo_sorted_pp[:nper_cells].index.to_numpy()
+					#additional_neurons=df_homo_sorted_pp[:nper_cells].index.to_numpy()
 					 
 					
 					# Neurons used for decoding
-					NeuronIndices=np.concatenate((TunedIndices,additional_neurons))  
+					#NeuronIndices=np.concatenate((TunedIndices,additional_neurons))  
 					
-					update_df= pd.DataFrame()
-					update_df['Pref.Homo']=df_homo_sorted_pp[:nper_cells]['Preference']
-					update_df['Pref.Hetero']=df_hetero_sorted_pp[:nper_cells]['Preference']
+					#update_df= pd.DataFrame()
+					#update_df['Pref.Homo']=df_homo_sorted_pp[:nper_cells]['Preference']
+					#update_df['Pref.Hetero']=df_hetero_sorted_pp[:nper_cells]['Preference']
 					
-					update_df['Neuron']=df_homo_sorted_pp[:nper_cells].index
+					#update_df['Neuron']=df_homo_sorted_pp[:nper_cells].index
 					
 					# update the  pref_df (to include the new additional neurons)
-					PrefDirInfo=pd.concat([pref_df, update_df], ignore_index=True)
+					#PrefDirInfo=pd.concat([pref_df, update_df], ignore_index=True)
 					
-				else:
-					NeuronIndices=TunedIndices
-					PrefDirInfo=pd.DataFrame()
-					PrefDirInfo=pref_df
+				#else:
+				#	NeuronIndices=TunedIndices
+				#	PrefDirInfo=pd.DataFrame()
+				#	PrefDirInfo=pref_df
 				
-				homo_data_p=homo_data[NeuronIndices,:,:]  # arranging homo data accroding to sorted pvalue 
-				hetero_data_p=hetero_data[NeuronIndices,:,:]  # arranging hetero data accroding to sorted pvalue 
+				homo_data_p=homo_data[homo_indices,:,:]  # arranging homo data accroding to sorted pvalue 
+				hetero_data_p=hetero_data[homo_indices,:,:]  # arranging hetero data accroding to sorted pvalue 
 				
 				print_status('Homo. shape before decoding is ' + str(homo_data_p.shape))
 				print_status('Hetero. shape before decoding is ' + str(hetero_data_p.shape))   
