@@ -138,7 +138,7 @@ for k in ROIs_hetero:
 #percent_data=[0,10,20,40,60,100]	 
 #percent_data=[0,10,25,50,100]
 #percent_data=[0,10,50,100]
-pvals_threshold=[0.9,0.50,0.05,0]
+pvals_threshold=[0.9,0.5,0.05,0]
 #########################################################################################
 ############################  ANALYSIS FOR TASK DATA #####################################
 #########################################################################################
@@ -547,7 +547,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 				print_status('Hetero. shape before decoding is ' + str(hetero_data_p.shape))   
  
 				# preference direction computation from data 
-				for neu_idx in PrefDir['Neuron'].to_numpy().astype('int32'): 
+				for neu_idx in PrefDir['Neuron'].to_numpy().astype('int64'): 
 					homo_data[neu_idx,:,:]=np.nan_to_num(homo_data[neu_idx,:,:],nan=0)
 					hetero_data[neu_idx,:,:]=np.nan_to_num(hetero_data[neu_idx,:,:],nan=0)
 					
@@ -792,6 +792,8 @@ for roi in ROIs_hetero:  # for each roi
 		## plotting for passive 
 		paradigm='passive'
 		A_passive=np.load(os.path.join(decoding_res_slopes_path,paradigm,roi,str(pp),'slopes.npy'))
+        
+		A_passive=np.nan_to_num(A_passive,nan=0)
 		
 		#A_passive[:,:,0]=A_passive[:,:,0]-np.mean(A_passive[:,17:19,0])
 		#A_passive[:,:,1]=A_passive[:,:,1]-np.mean(A_passive[:,17:19,1])
@@ -1008,7 +1010,7 @@ if is_montage_installed():
 else:
 	print_status('Montage NOT installed in your computer. Skipping...') 
  
-"""
+ 
 ## Make the Final.csv in R first (in slopes_summary.R)
   
 # Plot the summary of the slopes 
@@ -1019,9 +1021,9 @@ import pandas as pd
 final=pd.read_csv("/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/final.csv")
 conds=list(np.unique(final['Condition'])) 
 
-#xx = list(range(len(percent_data)))
-xx=percent_data
-percent_data_str=[str(k) for k in percent_data]
+#xx = list(range(len(pvals_threshold)))
+xx=pvals_threshold[::-1]
+percent_data_str=[str(k) for k in xx]
 
 for cond in conds:
 	df=final[(final['Condition'].str.contains(cond))] 
@@ -1097,44 +1099,7 @@ os.system(strn)
 
 strn='montage PPC_45_0.png PPC_90_0.png PPC_135_0.png PPC_45_10.png PPC_90_10.png PPC_135_10.png PPC_45_50.png PPC_90_50.png PPC_135_50.png PPC_45_100.png PPC_90_100.png PPC_135_100.png  Summary_PPC_45.png  Summary_PPC_90.png Summary_PPC_135.png -tile 3x5  -geometry +1+1 montages/PPC_vert_summary.png'
 os.system(strn) 
-
-# For horizontal
-os.chdir(decoding_res_fig_path)
-fname='montages/V1_45.png' 
-strn='montage V1_45_0.png V1_45_10.png V1_45_50.png V1_45_100.png  Summary_V1_45.png  -tile 5x1  -geometry +1+1 montages/V1_45.png'
-status=os.system(strn) 
-
-fname='montages/V1_90.png' 
-strn='montage V1_90_0.png V1_90_10.png V1_90_50.png V1_90_100.png Summary_V1_90.png  -tile 5x1  -geometry +1+1 montages/V1_90.png'
-status=os.system(strn) 
-    
-fname='montages/V1_135.png' 
-strn='montage V1_135_0.png V1_135_10.png V1_135_50.png V1_135_100.png  Summary_V1_135.png  -tile 5x1  -geometry +1+1 montages/V1_135.png'
-status=os.system(strn) 
-			
-fname='montages/PPC_45.png' 
-strn='montage PPC_45_0.png PPC_45_10.png PPC_45_50.png PPC_45_100.png Summary_PPC_45.png -tile 5x1  -geometry +1+1 montages/PPC_45.png'
-status=os.system(strn) 
-    
-fname='montages/PPC_90.png' 
-strn='montage PPC_90_0.png PPC_90_10.png PPC_90_50.png PPC_90_100.png Summary_PPC_90.png -tile 5x1  -geometry +1+1 montages/PPC_90.png'
-status=os.system(strn) 
-    
-fname='montages/PPC_135.png' 
-strn='montage PPC_135_0.png PPC_135_10.png PPC_135_50.png PPC_135_100.png Summary_PPC_135.png -tile 5x1  -geometry +1+1 montages/PPC_135.png'
-status=os.system(strn) 
-	
-os.chdir('montages')
-	
-fname='V1_hori.png'
-status=os.system('montage V1_45.png  V1_90.png  V1_135.png  -tile 1x3  -geometry +1+1 ' + fname)
-
-fname='PPC_hori.png'
-status=os.system('montage PPC_45.png  PPC_90.png  PPC_135.png  -tile 1x3  -geometry +1+1 ' + fname)
-
-
-
-	
+ 
  
 # montaging (this will work only if your system is Linux and montage installed))
 if is_montage_installed():
@@ -1184,328 +1149,4 @@ if is_montage_installed():
 
 
 else:
-	print_status('Montage NOT installed in your computer. Skipping...') 
- 
-
-
- 
-### ALL summary 
-# Plot the summary of the slopes 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-final=pd.read_csv("/media/olive/Research/Gitrepo/PopulationResponseCurve/fig_data/all.csv")
-conds=list(np.unique(final['Condition'])) 
-
-for cond in conds:
-	df=final[(final['Condition'].str.contains(cond))]  
- 
-	fig, ax = plt.subplots(1,1,figsize=(7,7))
-	
-	# Plot lines 
-	ax.plot([0,1,2,3,4,5],df['mean_value'],'b-') 
-	ax.plot([0,1,2,3,4,5],df['mean_value'],'bo')
-	ax.errorbar([0,1,2,3,4,5],df['mean_value'], yerr=df['se_value'],
-				fmt='none', capsize=5,color='b')
-	 
-	ax.set_xticks([0,1,2,3,4,5],["0","10","20","40","60","100"])   
-	ax.spines[['top','right']].set_visible(False) 
-	ax.spines[['bottom','left']].set_linewidth(3) 
-	ax.tick_params(axis='both', which='major', labelsize=24) 
-	ax.set_yticks(np.arange(0, 0.3, 0.1))
-	#ax.set_ylim(0.005, 0.05)
-		
-	fig.tight_layout(pad=2)   
-	#plt.show() 
-	save_file_name='ALL_' + cond.replace(' ','_') +'.png'
-	fig.savefig(os.path.join(decoding_res_fig_path,save_file_name),dpi=300)  
-
-# Montage the summary files 
-if is_montage_installed():
-	os.chdir(decoding_res_fig_path)
-	create_dir('montages') 
-	
-	fname='montages/ALL_V1.png'
-	status=os.system('montage ALL_V1_45.png  ALL_V1_90.png  ALL_V1_135.png -tile 3x1  -geometry +1+1 ' + fname) 
- 
-	fname='montages/ALL_PPC.png'
-	status=os.system('montage ALL_PPC_45.png  ALL_PPC_90.png  ALL_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
- 
-### TASK PASSIVE summary 
-# Plot the summary of the slopes 
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-final=pd.read_csv("/media/olive/Research/Gitrepo/PopulationResponseCurve/fig_data/task_passive.csv")
-conds=list(np.unique(final['Condition'])) 
-
-for cond in conds:
-	df=final[(final['Condition'].str.contains(cond))] 
-	
-	df_task=df[(df['paradigm']=='task')]
-	df_task.reset_index(drop=True, inplace=True)
-	
-  
-	df_passive=df[(df['paradigm']=='passive')]
-	df_passive.reset_index(drop=True, inplace=True) 
- 
-	fig, ax = plt.subplots(1,1,figsize=(7,7))
-	
-	# Plot lines 
-	ax.plot([0,1,2,3,4,5],df_task['mean_value'],'b-') 
-	ax.plot([0,1,2,3,4,5],df_task['mean_value'],'bo')
-	ax.errorbar([0,1,2,3,4,5],df_task['mean_value'], yerr=df_task['se_value'],
-				fmt='none', capsize=5,color='b')
-	
-	ax.plot([0,1,2,3,4,5],df_passive['mean_value'],'b--') 
-	ax.plot([0,1,2,3,4,5],df_passive['mean_value'],'bo')
-	ax.errorbar([0,1,2,3,4,5],df_passive['mean_value'], yerr=df_passive['se_value'],
-				fmt='none', capsize=5,color='b')  
- 
-	ax.set_xticks([0,1,2,3,4,5],["0","10","20","40","60","100"])   
-	ax.spines[['top','right']].set_visible(False) 
-	ax.spines[['bottom','left']].set_linewidth(3) 
-	ax.tick_params(axis='both', which='major', labelsize=24) 
-	ax.set_yticks(np.arange(0, 0.3, 0.1))
-	ax.set_ylim(-0.01, 0.2)
-		
-	fig.tight_layout(pad=2)   
-	#plt.show() 
-	save_file_name='Task_passive_' + cond.replace(' ','_') +'.png'
-	fig.savefig(os.path.join(decoding_res_fig_path,save_file_name),dpi=300)  
-
-# Montage the summary files 
-if is_montage_installed():
-	os.chdir(decoding_res_fig_path)
-	create_dir('montages') 
-	
-	fname='montages/TaskPassive_V1.png'
-	status=os.system('montage Task_passive_V1_45.png  Task_passive_V1_90.png  Task_passive_V1_135.png -tile 3x1  -geometry +1+1 ' + fname) 
- 
-	fname='montages/TaskPassive_PPC.png'
-	status=os.system('montage Task_passive_PPC_45.png  Task_passive_PPC_90.png  Task_passive_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
-
- 
-
-#### Homo Hetero Summary^t
-
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-final=pd.read_csv("/media/olive/Research/Gitrepo/PopulationResponseCurve/fig_data/homo_hetero.csv")
-conds=list(np.unique(final['Condition'])) 
-
-for cond in conds:
-	df=final[(final['Condition'].str.contains(cond))] 
-	
-	df_homo=df[(df['name']=='Homo')]
-	df_homo.reset_index(drop=True, inplace=True)
-	
-  
-	df_hetero=df[(df['name']=='Hetero')]
-	df_hetero.reset_index(drop=True, inplace=True) 
- 
-	fig, ax = plt.subplots(1,1,figsize=(7,7))
-	
-	# Plot lines 
-	ax.plot([0,1,2,3,4,5],df_homo['mean_value'],'r-') 
-	ax.plot([0,1,2,3,4,5],df_homo['mean_value'],'ro')
-	ax.errorbar([0,1,2,3,4,5],df_homo['mean_value'], yerr=df_homo['se_value'],
-				fmt='none', capsize=5,color='r')
-	
-	ax.plot([0,1,2,3,4,5],df_hetero['mean_value'],'b--') 
-	ax.plot([0,1,2,3,4,5],df_hetero['mean_value'],'bo')
-	ax.errorbar([0,1,2,3,4,5],df_hetero['mean_value'], yerr=df_passive['se_value'],
-				fmt='none', capsize=5,color='b')  
- 
-	ax.set_xticks([0,1,2,3,4,5],["0","10","20","40","60","100"])   
-	ax.spines[['top','right']].set_visible(False) 
-	ax.spines[['bottom','left']].set_linewidth(3) 
-	ax.tick_params(axis='both', which='major', labelsize=24) 
-	ax.set_yticks(np.arange(0, 0.2, 0.1))
-	ax.set_ylim(0, 0.2)
-		
-	fig.tight_layout(pad=2)   
-	#plt.show() 
-	save_file_name='Homo_Hetero_' + cond.replace(' ','_') +'.png'
-	fig.savefig(os.path.join(decoding_res_fig_path,save_file_name),dpi=300)  
-
-# Montage the summary files 
-if is_montage_installed():
-	os.chdir(decoding_res_fig_path)
-	create_dir('montages') 
-	
-	fname='montages/Homo_Hetero_V1.png'
-	status=os.system('montage Homo_Hetero_V1_45.png  Homo_Hetero_V1_90.png  Homo_Hetero_V1_135.png -tile 3x1  -geometry +1+1 ' + fname) 
- 
-	fname='montages/Homo_Hetero_PPC.png'
-	status=os.system('montage Homo_Hetero_PPC_45.png  Homo_Hetero_PPC_90.png  Homo_Hetero_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
-   
-"""
-  
-### Plotting the time-resolved dynamics in  Fig. 3C 
-
-"""
-elevation = 19  # Specify the elevation angle (in degrees)
-azimuth = -36   # Specify the azimuth angle (in degrees)
-roll=0
-
-
-def func_mat(y):
-	
-	ns,nt=y.shape
-	x=np.arange(22.5,360,45)-202.5
-	xnew=np.arange(-180,135,2)
-	
-	res=[]
-	
-	for k in range(nt):
-		func=interp1d(x,np.squeeze(y[:,k]),kind='cubic')
-		res.append(func(xnew))
-		
-	return np.stack(res,-1)
-		
-# Retrieveing the population tuning curves (for homo and hetero cases) 
-
-os.chdir('/media/olive/Research/oliver/IEMdecodingForCalciumData/pop_decoding/tuning_curves/task/V1_135/40')
-flist=os.listdir()
-
-  
-homo=[] 
-hetero=[]
-for k in flist:
-	
-	A=np.load(k)
-	B=zero_center_the_tcs(A,shift=wrap_around)
-	
-	homo.append(B[:,0,:])   # homo (all mouse)
-	hetero.append(B[:,1,:]) #hetero (all mouse)
- 
-homo=np.mean(np.stack(homo,-1),-1)	# mean across mouse
-hetero=np.mean(np.stack(hetero,-1),-1) # mean across mouse
-
-
-homo=homo[:,10:100] 
-hetero= hetero[:,10:100]
-  
-
-angles=np.arange(22.5,360,45)-202.5 # Stimulus angles
-ns=len(angles)   # no. of stimulus values
-center_around=5  # Center the tuning curves around this angle 
-
-fs=20   
-ts=1/fs   # sampling time
-tt=np.arange(-0.5,4,ts)
-
-fig=plt.figure(figsize=(6,6))
-ax = plt.axes(projection='3d')
-ax._axis3don = False
-
-x = angles
-y = tt
-X,Y= np.meshgrid(x,y)
-Z = homo 
-Z=func_mat(Z)
-xnew=np.arange(-180,135,2)
-
-yy=np.arange(-0.5,4,ts)
-X,Y=np.meshgrid(xnew,yy)
-
-ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",
-				linewidth=0,
-				rstride=1,
-				cstride=1,
-				edgecolors=None)  # surface plot
-
-ax.set_xlim(-180,180)
-ax.set_ylim(-0.5,4)
-ax.set_zlim(0,0.6) 
-ax.grid(visible=False)
-ax.invert_xaxis()   # also you have to invert the data
-ax.set_xticklabels([])
-ax.set_yticklabels([])
-ax.set_zticklabels([])
-
-tmp_planes = ax.zaxis._PLANES 
-ax.zaxis._PLANES = ( tmp_planes[1], tmp_planes[1], 
-					 tmp_planes[1], tmp_planes[1], 
-					 tmp_planes[1], tmp_planes[1])
-
-
-#ax.set_frame_on(False)
-
-ax.xaxis.pane.fill = False
-ax.yaxis.pane.fill = False
-ax.zaxis.pane.fill = False
-
-ax.xaxis.pane.set_edgecolor('w')
-ax.yaxis.pane.set_edgecolor('w')
-ax.zaxis.pane.set_edgecolor('w')
-fig.tight_layout(pad=2)  
-
-elevation = 24  # Specify the elevation angle (in degrees)
-azimuth = -40	# Specify the azimuth angle (in degrees)
-roll=0
-ax.view_init(elevation, azimuth,roll)
-ax.tick_params(axis='both', length=6,width=4,direction="out")  
-
-plt.show()
-
-fig.savefig("/home/olive/Desktop/Dynamics_homo.tiff",dpi=300)
-
-fig=plt.figure(figsize=(6,6))
-ax = plt.axes(projection='3d')
-ax._axis3don = False
- 
-x = angles
-y = tt
-X,Y= np.meshgrid(x,y)
-Z = hetero
-Z=func_mat(Z)
-xnew=np.arange(-180,135,2)
-yy=np.arange(-0.5,4,ts)
-X,Y=np.meshgrid(xnew,yy)
-
-	
-ax.plot_surface(np.fliplr(X.T), Y.T, Z, cmap="Spectral_r",linewidth=0,rstride=1, cstride=1,edgecolors=None)  # surface plot
-
- 
-ax.set_xticks([-180,0,180])
-ax.set_yticks([-0.5,0,1,2,3,4,5])
-ax.set_zticks([0,0.2, 0.4,0.6])
-ax.set_xlim(-180,180)
-ax.set_ylim(-0.5,4)
-ax.set_zlim(0,0.6) 
-ax.grid(visible=False)
-ax.invert_xaxis()   # also you have to invert the data
-ax.set_xticklabels([])
-ax.set_yticklabels([])
-ax.set_zticklabels([]) 
-
-tmp_planes = ax.zaxis._PLANES   # what is this temp_planes?
-ax.zaxis._PLANES = ( tmp_planes[1], tmp_planes[1], 
-					 tmp_planes[1], tmp_planes[1], 
-					 tmp_planes[1], tmp_planes[1])
-
-ax.xaxis.pane.fill = False
-ax.yaxis.pane.fill = False
-ax.zaxis.pane.fill = False
-
-ax.xaxis.pane.set_edgecolor('w')
-ax.yaxis.pane.set_edgecolor('w')
-ax.zaxis.pane.set_edgecolor('w')
- 
-fig.tight_layout(pad=2)  
-
-ax.set_xticklabels([])
-ax.set_yticklabels([])
-ax.set_zticklabels([])
-
-ax.view_init(elevation, azimuth,roll)
-plt.show()
-
-fig.savefig("/home/olive/Desktop/Dynamics_hetero.tiff",dpi=300)
-"""  
+	print_status('Montage NOT installed in your computer. Skipping...')  
