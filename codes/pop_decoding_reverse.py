@@ -1008,7 +1008,7 @@ if is_montage_installed():
 else:
 	print_status('Montage NOT installed in your computer. Skipping...') 
  
- 
+"""
 ## Make the Final.csv in R first (in slopes_summary.R)
   
 # Plot the summary of the slopes 

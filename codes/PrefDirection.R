@@ -13,9 +13,7 @@ prefDir_path='/media/olive/Research/oliver/prefDir'  # To save
 pval_path='/media/olive/Research/oliver/pvals'
 save_path='/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/' 
 
-conds<- c('V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135')
-percent<- c(10,20,40,60,100)
-pval_threshold<-0.05
+conds<- c('V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135')  
 nos<-8 # number of directions
 
 paradigm<-'task'
@@ -28,7 +26,7 @@ for (cond in conds){   # for each condition
   cond_name<- gsub("\\.mat", "", cond)
    
   # loading the p-value file
-  B<- readMat(file.path(pval_path,paradigm,cond))
+  B<- readMat(file.path(pval_path,paradigm, cond))
   #B$homo<- Filter(Negate(is.null), B$homo) # already negated in python
   #B$hetero<- Filter(Negate(is.null),B$hetero)
   

@@ -19,7 +19,7 @@ flist<-list.files(getwd())
 rois<-c('V1_45','V1_90','V1_135','PPC_45','PPC_90','PPC_135') 
 #percents<-c('0','10','20','40','60','100')
 #percents<-c('0','10','25','50','100')
-percents<-c('0','10','50','100')
+percents<-c('0','0.05','0.50','0.90')
 
 df<-data.frame(Condition=rep(NA,1),
                Percent=rep(NA,1),
