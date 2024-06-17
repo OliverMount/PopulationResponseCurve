@@ -138,7 +138,7 @@ for k in ROIs_hetero:
 #percent_data=[0,10,20,40,60,100]	 
 #percent_data=[0,10,25,50,100]
 #percent_data=[0,10,50,100]
-pvals_threshold=[0.95,0.50,0.10,0.05,0]
+pvals_threshold=[0.9,0.50,0.05,0]
 #########################################################################################
 ############################  ANALYSIS FOR TASK DATA #####################################
 #########################################################################################
@@ -256,13 +256,13 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
         		
         		
         		# pref_df in only for tuned-tuned
-				PrefDir = final[['Preference_x','Preference_y']]
-				PrefDir['Neuron'] = NeuronIndices
+				PrefDir = final[['Preference_x','Preference_y']].copy()
+
         		#pref_df = pref_df.copy()  # to avoid the copy warnings
         		#pref_df['Neuron'] = final.index.to_list()
-				PrefDir.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'}, inplace=True)
+				PrefDir=PrefDir.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'})
         		#pref_df.reset_index(drop=True, inplace=True) 
- 
+				PrefDir.loc[:,'Neuron'] = NeuronIndices
 
 				# Get the indices of the other neurons and use them for decoding
 				# Only homo data is enough to sort out the neurons
@@ -307,13 +307,16 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 				print_status('Hetero. shape before decoding is ' + str(hetero_data_p.shape))   
  
 				# preference direction computation from data 
-				for neu_idx in range(homo_data_p.shape[0]): 
-					homo_data_p[neu_idx,:,:]=np.nan_to_num(homo_data_p[neu_idx,:,:],nan=0)
-					hetero_data_p[neu_idx,:,:]=np.nan_to_num(hetero_data_p[neu_idx,:,:],nan=0)
-					PrefDir['Pref.Homo'][neu_idx]=get_preference(homo_data_p[neu_idx,:,:],homo_labels)[0]			   
-					PrefDir['Pref.Hetero'][neu_idx]=get_preference(hetero_data_p[neu_idx,:,:],hetero_labels)[0]
+				for neu_idx in PrefDir['Neuron'].to_numpy().astype('int32'): 
+					homo_data[neu_idx,:,:]=np.nan_to_num(homo_data[neu_idx,:,:],nan=0)
+					hetero_data[neu_idx,:,:]=np.nan_to_num(hetero_data[neu_idx,:,:],nan=0)
+					
+					#neuron_index = PrefDir.loc[PrefDir['Neuron'] == neu_idx].index[0]
+                    
+					PrefDir.at[neu_idx,'Pref.Homo'] =get_preference(homo_data[neu_idx,:,:],homo_labels)[0]			   
+					PrefDir.at[neu_idx,'Pref.Hetero']=get_preference(hetero_data[neu_idx,:,:],hetero_labels)[0]
 				
-				# Parallel decoding begings here
+                # Parallel decoding begings here
 				st = time.time() 
 				A=run_parallel_the_pop_decoding(homo_data_p,hetero_data_p,homo_labels,hetero_labels,PrefDir,nt)  # (Homo result, Hetero. result)
 				ed = time.time()
@@ -340,7 +343,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
  
 ##  Slope dynamics computation and storing the results
 for roi in ROIs_hetero:   # For each condition  
-	for pp in percent_data: # For each percentage of data 
+	for pp in pvals_threshold: # For each percentage of data 
 		
 		os.chdir(os.path.join(decoding_res_data_path, paradigm))
 		print_status('Computing slopes for  ROI' + roi +' for the percentage  ',str(pp)) 
@@ -400,6 +403,7 @@ paradigm='passive'
 #PPC_passive=['3L.mat','3R.mat','Ylcb.mat', 'Ylch.mat','Ylci.mat','YLck.mat','Ylcl.mat','Ylcm.mat']
 
 for roi in ROIs_hetero:   # For each heterogeneous condition
+#for roi in ['V1_45']:	
 	os.chdir(data_path_passive)
 	print_status('Dealing with ROI: ' + roi)
 	
@@ -412,12 +416,14 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 	print_status('No. of animals in ' + roi + ' is ' + str(noa)) 
 	
 	# load the neuron preferences and pvalue for all animals 
+	# The csv file is created in R (pls. look at the script PrefDirection.R in the scripts folder)
 	B = pd.read_csv(os.path.join(pval_pref_path, paradigm,roi+'.csv'))
-	  
+	
+	
 	#if roi.startswith('V1'):
-	#	list_for_sorting=V1_passive
+	#	list_for_sorting=V1_task
 	#else:
-	#	list_for_sorting=PPC_passive 
+	#	list_for_sorting=PPC_task 
 	
 	#ani_list=[[file for file in ani_list if file.lower().endswith(suffix.lower())] for suffix in list_for_sorting]
 	#ani_list= [ani[0] for ani in ani_list] 
@@ -433,22 +439,10 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		df_hetero.reset_index(drop=True, inplace=True)  # reset the indices
 		 
 		# arrange accoring to the p-value first
-		idx_homo=np.argsort(df_homo['Pvalue'])
-		df_homo_sorted=df_homo.loc[idx_homo]
-		df_hetero_sorted=df_hetero.loc[idx_homo] 
-		 
-		# to get a data frame that is tuned in both the condition
-		# finding indices that match both conditions
-		final=pd.merge(df_homo_sorted[df_homo_sorted['Pvalue'] <= 0.05], df_hetero_sorted[df_hetero_sorted['Pvalue'] <= 0.05], left_index=True, right_index=True)
-		TunedIndices=final.index.to_numpy()  
-		
-		# pref_df in only for tuned-tuned
-		pref_df = final[['Preference_x','Preference_y']]
-		pref_df = pref_df.copy()  # to avoid the copy warnings
-		pref_df['Neuron'] = final.index.to_list()
-		pref_df.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'}, inplace=True)
-		pref_df.reset_index(drop=True, inplace=True) 
-		 
+		#idx_homo=np.argsort(-df_homo['Pvalue'])  # decending order of sort
+		#df_homo_sorted=df_homo.loc[idx_homo]
+		#df_hetero_sorted=df_hetero.loc[idx_homo]  
+				 
 		print_status('Dealing with the animal ' + ani_list[p])
 		
 		A=loadmat(ani_list[p])	 # Load the data
@@ -456,20 +450,19 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		# homo and hetero data
 		homo_data=A['sample_data_homo']	   #orig.data:	 trials X units X time-pts
 		homo_data=homo_data.transpose(1,0,2)   #for decoding:  units X trials X time-pts  
-		homo_data=np.nan_to_num(homo_data, nan=0)    
-  
+		
 		hetero_data=A['sample_data_hetero']
-		hetero_data =hetero_data.transpose(1,0,2) 
-		hetero_data =np.nan_to_num(hetero_data,nan=0)  
- 
+		hetero_data =hetero_data.transpose(1,0,2)  
+		
 		if zscoring_rawdata_desired: 
 			homo_data = zscore(homo_data,axis=2)
 			hetero_data = zscore(hetero_data,axis=2)
+ 
 		
 		if baseline_correction_needed:
 			homo_data -= np.mean(homo_data[:, :, base_idx], axis=-1, keepdims=True)
 			hetero_data -= np.mean(hetero_data[:, :, base_idx], axis=-1, keepdims=True)
-  
+ 
 		# homo and hetero data labels
 		homo_labels=np.squeeze(A['dirIdx_homo'])  
 		hetero_labels=np.squeeze(A['dirIdx_hetero'])  
@@ -477,7 +470,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		del A
 		
 		# Shuffle labels and data before decoding 
-		# Not necessary for population decoding
+		# Not necessary for population decoding though
 		idx=np.random.permutation(len(homo_labels))
 		homo_labels=homo_labels[idx]
 		homo_data=homo_data[:,idx,:]
@@ -486,46 +479,66 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		hetero_labels=hetero_labels[idx]
 		hetero_data=hetero_data[:,idx,:] 
 		
-		for pp in percent_data: 
+		for pp in pvals_threshold: 
 		
 			path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
 			create_dir(path_name)
 			fname=path_name+'/Mouse'+str(p+1) + '.npy'  
 			
 			if not os.path.exists(fname):
+                
+                # to get a data frame that is tuned in both the condition
+        		# finding indices that match both conditions
+				final=pd.merge(df_homo[df_homo['Pvalue'] >= pp], df_hetero[df_hetero['Pvalue'] >= pp], left_index=True, right_index=True)
+
+        		#final=pd.merge(df_homo_sorted[df_homo_sorted['Pvalue'] >= pp], df_hetero_sorted[df_hetero_sorted['Pvalue'] >= pp], left_index=True, right_index=True)
+				NeuronIndices=final.index.to_numpy() 
+        		
+        		
+        		# pref_df in only for tuned-tuned
+				PrefDir = final[['Preference_x','Preference_y']].copy()
+
+        		#pref_df = pref_df.copy()  # to avoid the copy warnings
+        		#pref_df['Neuron'] = final.index.to_list()
+				PrefDir=PrefDir.rename(columns={'Preference_x': 'Pref.Homo', 'Preference_y': 'Pref.Hetero'})
+        		#pref_df.reset_index(drop=True, inplace=True) 
+				PrefDir.loc[:,'Neuron'] = NeuronIndices
 
 				# Get the indices of the other neurons and use them for decoding
 				# Only homo data is enough to sort out the neurons
-				# as we always choose homotuned neurons and choose the same in the 
+				# as we always choose homo tuned neurons and choose the same in the 
 				# hetero condition
-				if pp!=0:  # Other than tuned on both homo and hetero 
+				#if pp!=0:  # Other than tuned on both homo and hetero 
 					 
 					 
-					# first remove the tuned tuned one from the original df
-					df_homo_sorted_pp=df_homo_sorted.drop(TunedIndices) 
-					df_hetero_sorted_pp=df_hetero_sorted.drop(TunedIndices)
-					
+				# first remove the tuned tuned one from the original df
+				#df_homo_pp=df_homo[df_homo['Pvalue']>pp] 
+				#df_hetero_pp=df_hetero[df_homo['Pvalue']>pp]
+                
+				#homo_indices=df_homo_pp.index.to_numpy()
+				#hetero_indices=df_hetero_pp['Unnamed: 0'].to_numpy()					
 					# additional neurons
-					nper_cells = int(np.ceil((pp/100)*df_homo_sorted_pp.shape[0])) # get the number of cells 
+					#nper_cells = int(np.ceil((pp/100)*df_homo_sorted_pp.shape[0])) # get the number of cells 
 					
-					additional_neurons=df_homo_sorted_pp[:nper_cells].index.to_numpy()
+					#additional_neurons=df_homo_sorted_pp[:nper_cells].index.to_numpy()
+					 
 					
 					# Neurons used for decoding
-					NeuronIndices=np.concatenate((TunedIndices,additional_neurons))  
+					#NeuronIndices=np.concatenate((TunedIndices,additional_neurons))  
 					
-					update_df= pd.DataFrame()
-					update_df['Pref.Homo']=df_homo_sorted_pp[:nper_cells]['Preference']
-					update_df['Pref.Hetero']=df_hetero_sorted_pp[:nper_cells]['Preference']
+					#update_df= pd.DataFrame()
+					#update_df['Pref.Homo']=df_homo_sorted_pp[:nper_cells]['Preference']
+					#update_df['Pref.Hetero']=df_hetero_sorted_pp[:nper_cells]['Preference']
 					
-					update_df['Neuron']=df_homo_sorted_pp[:nper_cells].index
+					#update_df['Neuron']=df_homo_sorted_pp[:nper_cells].index
 					
 					# update the  pref_df (to include the new additional neurons)
-					PrefDirInfo=pd.concat([pref_df, update_df], ignore_index=True)
+					#PrefDirInfo=pd.concat([pref_df, update_df], ignore_index=True)
 					
-				else:
-					NeuronIndices=TunedIndices
-					PrefDirInfo=pd.DataFrame()
-					PrefDirInfo=pref_df
+				#else:
+				#	NeuronIndices=TunedIndices
+				#	PrefDirInfo=pd.DataFrame()
+				#	PrefDirInfo=pref_df
 				
 				homo_data_p=homo_data[NeuronIndices,:,:]  # arranging homo data accroding to sorted pvalue 
 				hetero_data_p=hetero_data[NeuronIndices,:,:]  # arranging hetero data accroding to sorted pvalue 
@@ -534,15 +547,18 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 				print_status('Hetero. shape before decoding is ' + str(hetero_data_p.shape))   
  
 				# preference direction computation from data 
-				for neu_idx in range(homo_data_p.shape[0]):  
-					homo_data_p[neu_idx,:,:]=np.nan_to_num(homo_data_p[neu_idx,:,:],nan=0)
-					hetero_data_p[neu_idx,:,:]=np.nan_to_num(hetero_data_p[neu_idx,:,:],nan=0)
-					PrefDirInfo['Pref.Homo'][neu_idx]=get_preference(homo_data_p[neu_idx,:,:],homo_labels)[0]			   
-					PrefDirInfo['Pref.Hetero'][neu_idx]=get_preference(hetero_data_p[neu_idx,:,:],hetero_labels)[0]
+				for neu_idx in PrefDir['Neuron'].to_numpy().astype('int32'): 
+					homo_data[neu_idx,:,:]=np.nan_to_num(homo_data[neu_idx,:,:],nan=0)
+					hetero_data[neu_idx,:,:]=np.nan_to_num(hetero_data[neu_idx,:,:],nan=0)
+					
+					#neuron_index = PrefDir.loc[PrefDir['Neuron'] == neu_idx].index[0]
+                    
+					PrefDir.at[neu_idx,'Pref.Homo'] =get_preference(homo_data[neu_idx,:,:],homo_labels)[0]			   
+					PrefDir.at[neu_idx,'Pref.Hetero']=get_preference(hetero_data[neu_idx,:,:],hetero_labels)[0]
 				
-				# Parallel decoding begings here
+                # Parallel decoding begings here
 				st = time.time() 
-				A=run_parallel_the_pop_decoding(homo_data_p,hetero_data_p,homo_labels,hetero_labels,PrefDirInfo,nt)  # (Homo result, Hetero. result)
+				A=run_parallel_the_pop_decoding(homo_data_p,hetero_data_p,homo_labels,hetero_labels,PrefDir,nt)  # (Homo result, Hetero. result)
 				ed = time.time()
 					
 				elapsed_time = ed - st
@@ -562,11 +578,11 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 					 
 			else:
 				print_status('Already done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
-
+ 
 # Centering and computing slopes for passive case  
 # Slope dynamics computation and storing the results
 for roi in ROIs_hetero:   # For each condition  
-	for pp in percent_data: # For each percentage of data 
+	for pp in pvals_threshold: # For each percentage of data 
 		
 		os.chdir(os.path.join(decoding_res_data_path, paradigm))
 		print_status('Computing slopes for  ROI' + roi +' for the percentage  ',str(pp)) 
@@ -636,7 +652,7 @@ cols=['Paradigm', 'Roi', 'Condition', 'Percentage', 'Cluster p-value','Significa
 df = pd.DataFrame(columns=cols)
 
 for roi in ROIs_hetero:  # for each roi
-	for pp in percent_data: # for each p-value percentage   
+	for pp in pvals_threshold: # for each p-value percentage   
 		
 		paradigm='task'
 		# For task (solid lines) 
@@ -949,35 +965,35 @@ if is_montage_installed():
 	
 	############### Plotting  summary of slopes ############
 	fname='montages/V1_vert.png'
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[:3]]) + '  -tile 3x' + str(len(percent_data))  + '  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[:3]]) + '  -tile 3x' + str(len(pvals_threshold))  + '  -geometry +1+1 ' + fname
 	status=os.system(strn) 
  
 	fname='montages/PPC_vert.png'
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[3:]]) + '  -tile 3x' + str(len(percent_data))  + '  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[3:]]) + '  -tile 3x' + str(len(pvals_threshold))  + '  -geometry +1+1 ' + fname
 	status=os.system(strn)  
 	
 	fname='montages/V1_45.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[:1]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[:1]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
 
 	fname='montages/V1_90.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[1:2]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[1:2]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
     
 	fname='montages/V1_135.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[2:3]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[2:3]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
 			
 	fname='montages/PPC_45.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[3:4]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[3:4]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
     
 	fname='montages/PPC_90.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[4:5]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[4:5]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
     
 	fname='montages/PPC_135.png' 
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[5:6]]) + ' -tile ' + str(len(percent_data))  + 'x1  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in pvals_threshold for k in ROIs_hetero[5:6]]) + ' -tile ' + str(len(pvals_threshold))  + 'x1  -geometry +1+1 ' + fname
 	status=os.system(strn) 
 	
 	os.chdir('montages')
@@ -1057,6 +1073,8 @@ for cond in conds:
 	save_file_name='Summary_' + cond.replace(' ','_') +'.png'
 	fig.savefig(os.path.join(decoding_res_fig_path,save_file_name))  
 	plt.show()
+    
+ 
 
 # Montage the summary files 
 if is_montage_installed():
@@ -1490,4 +1508,4 @@ ax.view_init(elevation, azimuth,roll)
 plt.show()
 
 fig.savefig("/home/olive/Desktop/Dynamics_hetero.tiff",dpi=300)
-""" 
+"""  
