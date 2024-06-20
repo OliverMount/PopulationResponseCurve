@@ -1094,10 +1094,10 @@ if is_montage_installed():
     
 # For vertical 
 os.chdir(decoding_res_fig_path)
-strn= 'montage V1_45_0.png V1_90_0.png V1_135_0.png V1_45_10.png V1_90_10.png V1_135_10.png V1_45_50.png V1_90_50.png V1_135_50.png V1_45_100.png V1_90_100.png V1_135_100.png Summary_V1_45.png  Summary_V1_90.png Summary_V1_135.png  -tile 3x5  -geometry +1+1 montages/V1_vert_summary.png'
+strn= 'montage V1_45_0.9.png V1_90_0.9.png V1_135_0.9.png   V1_45_0.5.png V1_90_0.5.png V1_135_0.5.png  V1_45_0.05.png V1_90_0.05.png V1_135_0.05.png  V1_45_0.png V1_90_0.png V1_135_0.png  Summary_V1_45.png  Summary_V1_90.png Summary_V1_135.png  -tile 3x5  -geometry +1+1 montages/V1_vert_summary.png'
 os.system(strn) 
 
-strn='montage PPC_45_0.png PPC_90_0.png PPC_135_0.png PPC_45_10.png PPC_90_10.png PPC_135_10.png PPC_45_50.png PPC_90_50.png PPC_135_50.png PPC_45_100.png PPC_90_100.png PPC_135_100.png  Summary_PPC_45.png  Summary_PPC_90.png Summary_PPC_135.png -tile 3x5  -geometry +1+1 montages/PPC_vert_summary.png'
+strn= 'montage PPC_45_0.9.png PPC_90_0.9.png PPC_135_0.9.png   PPC_45_0.5.png PPC_90_0.5.png PPC_135_0.5.png  PPC_45_0.05.png PPC_90_0.05.png PPC_135_0.05.png  PPC_45_0.png PPC_90_0.png PPC_135_0.png  Summary_PPC_45.png  Summary_PPC_90.png Summary_PPC_135.png  -tile 3x5  -geometry +1+1 montages/PPC_vert_summary.png'
 os.system(strn) 
  
  
