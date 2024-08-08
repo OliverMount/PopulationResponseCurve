@@ -1108,7 +1108,7 @@ if is_montage_installed():
 	
 	############### Plotting  summary of slopes ############
 	fname='montages/V1_vert.png'
-	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[:3]]) + '  -tile 3x' + str(len(percent_data))  + '  -geometry +1+1 ' + fname
+	strn='montage ' + " ".join([k+'_'+str(l)+'.png'  for l in percent_data for k in ROIs_hetero[:3]]) + '  -tile 3x' + str(len(percent_data_str))  + '  -geometry +1+1 ' + fname
 	status=os.system(strn) 
  
 	fname='montages/PPC_vert.png'
@@ -1150,3 +1150,4 @@ if is_montage_installed():
 
 else:
 	print_status('Montage NOT installed in your computer. Skipping...')  
+"""

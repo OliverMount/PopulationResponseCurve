@@ -1,4 +1,7 @@
 ## Arranging data for population response curve model 
+# this extracts the data and the pvalue from the raw data
+
+# after executing this code, execute the preference directory code
 
 import os
 import scipy
@@ -43,9 +46,7 @@ for paradigm in paradigms:
                 
                 # Removing the empty list p-values
                 homo_pval.append(np.squeeze(homo[k][0][0][0]))
-                hetero_pval.append(np.squeeze(hetero[k][0][0][0]))  
-                
-                 
+                hetero_pval.append(np.squeeze(hetero[k][0][0][0]))   
                 
                 # Removing the empty data sets
                 #saving the data values
