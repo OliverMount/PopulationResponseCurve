@@ -244,8 +244,8 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		
 			path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
 			create_dir(path_name)
-			#fname=path_name+'/Mouse'+str(p+1) + '.npy'  
-			fname=path_name+'/Mouse'+str(p+1) + '.mat'  			
+			fname=path_name+'/Mouse'+str(p+1) + '.npy'  
+			#fname=path_name+'/Mouse'+str(p+1) + '.mat'  			
 			if not os.path.exists(fname):
                 
                 # to get a data frame that is tuned in both the condition
@@ -328,13 +328,11 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 				print('Shape of A is ', A.shape)
 				print_status('Saving the tuning curves') 
 				path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
-				create_dir(path_name)
-				#fname=path_name+'/Mouse'+str(p+1) + '.npy'
-				#fname=path_name+'/Mouse'+str(p+1) + '.mat'
+				create_dir(path_name) 
 				print(fname)
 							
-				#np.save(fname,np.squeeze(A))
-				savemat(fname,{'PRC' : np.squeeze(A)})
+				np.save(fname,np.squeeze(A))
+				#savemat(fname,{'PRC' : np.squeeze(A)})
 				del A 
 					
 				print_status('Done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
@@ -342,7 +340,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 			else:
 				print_status('Already done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
 
-"""
+ 
 # Zero-centering and computing slopes for task case
  
 ##  Slope dynamics computation and storing the results
@@ -398,7 +396,7 @@ for roi in ROIs_hetero:   # For each condition
 				print_status('Already done with slope computations') 
 				
 		np.save(fname,slopes)   
-"""		
+ 		
 ############## passive data decoding   ##################  
 
 paradigm='passive' 
@@ -487,8 +485,8 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 		
 			path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
 			create_dir(path_name)
-			#fname=path_name+'/Mouse'+str(p+1) + '.npy'  
-			fname=path_name+'/Mouse'+str(p+1) + '.mat' 
+			fname=path_name+'/Mouse'+str(p+1) + '.npy'  
+			#fname=path_name+'/Mouse'+str(p+1) + '.mat' 
 			
 			if not os.path.exists(fname):
                 
@@ -572,13 +570,11 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 				print('Shape of A is ', A.shape)
 				print_status('Saving the tuning curves') 
 				path_name=os.path.join(decoding_res_data_path,paradigm,roi,str(pp))
-				create_dir(path_name)
-				#fname=path_name+'/Mouse'+str(p+1) + '.npy'
-				#fname=path_name+'/Mouse'+str(p+1) + '.mat'
+				create_dir(path_name) 
 				print(fname)
 							
-				#np.save(fname,np.squeeze(A))
-				savemat(fname,{'PRC' : np.squeeze(A)})
+				np.save(fname,np.squeeze(A))
+				#savemat(fname,{'PRC' : np.squeeze(A)})
 				del A 
 					
 				print_status('Done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
@@ -586,7 +582,7 @@ for roi in ROIs_hetero:   # For each heterogeneous condition
 			else:
 				print_status('Already done with ' + str(p+1) + '/' + str(noa) + ' for the percentage '+ str(pp),'') 
  
-"""
+ 
 # Centering and computing slopes for passive case  
 # Slope dynamics computation and storing the results
 for roi in ROIs_hetero:   # For each condition  
