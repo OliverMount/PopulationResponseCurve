@@ -643,13 +643,13 @@ plt_lwd=3
 alp=0.2
 
 # for task
-first_sig_task=0.31
-second_sig_task=0.3
-diff_sig_task=0.29
+first_sig_task=0.3
+second_sig_task=0.29
+diff_sig_task=0.31   # black one
 # for passive
-first_sig_passive=0.27
-second_sig_passive=0.26
-diff_sig_passive=0.25
+first_sig_passive=0.26
+second_sig_passive=0.25
+diff_sig_passive=0.27  # black one
 
 
 cols=['Paradigm', 'Roi', 'Condition', 'Percentage', 'Cluster p-value','Significant time points']
@@ -1072,9 +1072,11 @@ for cond in conds:
 	ax.spines[['bottom','left']].set_linewidth(3) 
 	ax.tick_params(axis='both', which='major', labelsize=20,length=5,width=2) 
 	#ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-	ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
-	ax.set_yticks(np.arange(0, 0.20, 0.10))
+	#ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
 	ax.set_ylim(-0.005, 0.20)
+	ax.set_yticks([0, 0.1, 0.2])
+	ax.set_yticklabels(["0", "0.1", "0.2"])
+
 		
 	fig.tight_layout(pad=2)   
 	#plt.show() 
