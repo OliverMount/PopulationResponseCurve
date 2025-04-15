@@ -1070,12 +1070,12 @@ for cond in conds:
 	#ax.set_xlim(0.9, 0)
 	ax.spines[['top','right']].set_visible(False) 
 	ax.spines[['bottom','left']].set_linewidth(3) 
-	ax.tick_params(axis='both', which='major', labelsize=20,length=5,width=2) 
+	ax.tick_params(axis='both', which='major', labelsize=24,length=10,width=2) 
 	#ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-	ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
+	#ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
 	ax.set_ylim(-0.005, 0.20)
 	ax.set_yticks([0, 0.1, 0.2])
-	#ax.set_yticklabels(["0", "0.1", "0.2"])
+	ax.set_yticklabels(["0", "0.1", "0.2"])
 
 		
 	fig.tight_layout(pad=2)   
