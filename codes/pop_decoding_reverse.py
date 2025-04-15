@@ -1044,27 +1044,28 @@ for cond in conds:
 	fig, ax = plt.subplots(1,1,figsize=(7,7))
 	
 	# Plot lines 
-	ax.plot(xx[::-1],df_task_homo['mean_value'].to_list()[::-1],'r-') 
-	ax.plot(xx[::-1],df_task_homo['mean_value'].to_list()[::-1],'ro')
-	ax.errorbar(xx[::-1],df_task_homo['mean_value'].to_list()[::-1], yerr=df_task_homo['se_value'],
+	ax.plot(xx,df_task_homo['mean_value'],'r-') 
+	ax.plot(xx,df_task_homo['mean_value'],'ro')
+	ax.errorbar(xx,df_task_homo['mean_value'], yerr=df_task_homo['se_value'],
 				fmt='none', capsize=5,color='r')
 	
-	ax.plot(xx[::-1],df_passive_homo['mean_value'].to_list()[::-1],'r--') 
-	ax.plot(xx[::-1],df_passive_homo['mean_value'].to_list()[::-1],'ro')
-	ax.errorbar(xx[::-1],df_passive_homo['mean_value'].to_list()[::-1], yerr=df_passive_homo['se_value'],
+	ax.plot(xx,df_passive_homo['mean_value'],'r--') 
+	ax.plot(xx,df_passive_homo['mean_value'],'ro')
+	ax.errorbar(xx,df_passive_homo['mean_value'], yerr=df_passive_homo['se_value'],
 				fmt='none', capsize=5,color='r') 
 	
-	ax.plot(xx[::-1],df_task_hetero['mean_value'].to_list()[::-1],'b-') 
-	ax.plot(xx[::-1],df_task_hetero['mean_value'].to_list()[::-1],'bo')
-	ax.errorbar(xx[::-1],df_task_hetero['mean_value'].to_list()[::-1], yerr=df_task_hetero['se_value'],
+	ax.plot(xx,df_task_hetero['mean_value'],'b-') 
+	ax.plot(xx,df_task_hetero['mean_value'],'bo')
+	ax.errorbar(xx,df_task_hetero['mean_value'], yerr=df_task_hetero['se_value'],
 				fmt='none', capsize=5,color='b')
 	
-	ax.plot(xx[::-1],df_passive_hetero['mean_value'].to_list()[::-1],'b--') 
-	ax.plot(xx[::-1],df_passive_hetero['mean_value'].to_list()[::-1],'bo')
-	ax.errorbar(xx[::-1],df_passive_hetero['mean_value'].to_list()[::-1], yerr=df_passive_hetero['se_value'],
+	ax.plot(xx,df_passive_hetero['mean_value'],'b--') 
+	ax.plot(xx,df_passive_hetero['mean_value'],'bo')
+	ax.errorbar(xx,df_passive_hetero['mean_value'], yerr=df_passive_hetero['se_value'],
 				fmt='none', capsize=5,color='b') 
  
-	ax.set_xticks(xx[::-1],percent_data_str[::-1])   
+	ax.set_xticks(xx,percent_data_str)  
+	ax.invert_xaxis()  
 	ax.spines[['top','right']].set_visible(False) 
 	ax.spines[['bottom','left']].set_linewidth(3) 
 	ax.tick_params(axis='both', which='major', labelsize=24,length=10,width=2) 
