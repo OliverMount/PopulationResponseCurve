@@ -1065,7 +1065,7 @@ for cond in conds:
 				fmt='none', capsize=5,color='b') 
  
 	ax.set_xticks(xx,percent_data_str)  
-	ax.invert_xaxis()  
+	ax.invert_xaxis()  # for plotting in the reverse order
 	ax.spines[['top','right']].set_visible(False) 
 	ax.spines[['bottom','left']].set_linewidth(3) 
 	ax.tick_params(axis='both', which='major', labelsize=24,length=10,width=2) 
