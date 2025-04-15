@@ -1064,12 +1064,13 @@ for cond in conds:
 	ax.errorbar(xx,df_passive_hetero['mean_value'], yerr=df_passive_hetero['se_value'],
 				fmt='none', capsize=5,color='b') 
  
-	ax.set_xticks(xx,percent_data_str)  
+	ax.set_xticks(xx,percent_data_str)
+	ax.set_xticklabels( ["", "0.05", "0.5", "0.9"],  rotation=0, fontsize=10)  # to omit the zero
 	ax.invert_xaxis()  # for plotting in the reverse order
-	ax.set_xlim(0.9, 0)
+	#ax.set_xlim(0.9, 0)
 	ax.spines[['top','right']].set_visible(False) 
 	ax.spines[['bottom','left']].set_linewidth(3) 
-	ax.tick_params(axis='both', which='major', labelsize=24,length=10,width=2) 
+	ax.tick_params(axis='both', which='major', labelsize=20,length=5,width=2) 
 	#ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 	ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
 	ax.set_yticks(np.arange(0, 0.20, 0.10))
