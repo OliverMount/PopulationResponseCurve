@@ -1066,6 +1066,7 @@ for cond in conds:
  
 	ax.set_xticks(xx,percent_data_str)  
 	ax.invert_xaxis()  # for plotting in the reverse order
+	ax.set_xlim(0.9, 0)
 	ax.spines[['top','right']].set_visible(False) 
 	ax.spines[['bottom','left']].set_linewidth(3) 
 	ax.tick_params(axis='both', which='major', labelsize=24,length=10,width=2) 
@@ -1095,7 +1096,8 @@ if is_montage_installed():
 	status=os.system('montage Summary_PPC_45.png  Summary_PPC_90.png  Summary_PPC_135.png -tile 3x1  -geometry +1+1 ' + fname)  
 	
     
-    
+
+"""  
     
 # For vertical 
 os.chdir(decoding_res_fig_path)
@@ -1155,4 +1157,6 @@ if is_montage_installed():
 
 else:
 	print_status('Montage NOT installed in your computer. Skipping...')  
+	
+"""
 
