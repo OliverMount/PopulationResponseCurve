@@ -1072,16 +1072,16 @@ for cond in conds:
 	ax.spines[['bottom','left']].set_linewidth(3) 
 	ax.tick_params(axis='both', which='major', labelsize=20,length=5,width=2) 
 	#ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-	#ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
+	ax.yaxis.set_major_formatter(plt.FormatStrFormatter('%.3f'))
 	ax.set_ylim(-0.005, 0.20)
 	ax.set_yticks([0, 0.1, 0.2])
-	ax.set_yticklabels(["0", "0.1", "0.2"])
+	#ax.set_yticklabels(["0", "0.1", "0.2"])
 
 		
 	fig.tight_layout(pad=2)   
 	#plt.show() 
 	#save_file_name='Summary_' + cond.replace(' ','_') +'.pdf'
-	save_file_name='Summary_' + cond.replace(' ','_') +'_new.png'
+	save_file_name='Summary_' + cond.replace(' ','_') +'.png'
 	fig.savefig(os.path.join(decoding_res_fig_path,save_file_name))  
 	plt.show()
     
@@ -1100,7 +1100,7 @@ if is_montage_installed():
 	
     
 
-"""  
+
     
 # For vertical 
 os.chdir(decoding_res_fig_path)
@@ -1110,7 +1110,7 @@ os.system(strn)
 strn= 'montage PPC_45_0.9.png PPC_90_0.9.png PPC_135_0.9.png   PPC_45_0.5.png PPC_90_0.5.png PPC_135_0.5.png  PPC_45_0.05.png PPC_90_0.05.png PPC_135_0.05.png  PPC_45_0.png PPC_90_0.png PPC_135_0.png  Summary_PPC_45.png  Summary_PPC_90.png Summary_PPC_135.png  -tile 3x5  -geometry +1+1 montages/PPC_vert_summary.png'
 os.system(strn) 
  
- 
+"""  
 # montaging (this will work only if your system is Linux and montage installed))
 if is_montage_installed():
 	os.chdir(decoding_res_fig_path)
