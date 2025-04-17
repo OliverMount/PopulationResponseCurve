@@ -1026,7 +1026,9 @@ final=pd.read_csv("/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron
 conds=list(np.unique(final['Condition'])) 
 
 #xx = list(range(len(pvals_threshold)))
-xx=pvals_threshold[::-1]
+xx=pvals_threshold[::-1] 
+xx=[k*100 for k in xx ]
+ 
 percent_data_str=[str(k) for k in xx]
 
 for cond in conds:
@@ -1065,7 +1067,7 @@ for cond in conds:
 				fmt='none', capsize=5,color='b') 
  
 	ax.set_xticks(xx,percent_data_str)
-	ax.set_xticklabels( ["", "0.05", "0.5", "0.9"],  rotation=0, fontsize=10)  # to omit the zero
+	ax.set_xticklabels( ["100", "", "50", "10"],  rotation=0, fontsize=10)  # to omit the zero
 	ax.invert_xaxis()  # for plotting in the reverse order
 	#ax.set_xlim(0.9, 0)
 	ax.spines[['top','right']].set_visible(False) 
