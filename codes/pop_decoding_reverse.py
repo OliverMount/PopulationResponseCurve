@@ -33,7 +33,7 @@ matplotlib.rcParams['axes.linewidth'] = 2
 
 # Load local modules 
 
-os.chdir('/media/olive/Research/oliver/IEMdecodingForCalciumData/scripts')
+os.chdir('/media/oli/Research/oliver/IEMdecodingForCalciumData/scripts')
  
 sys.path.append(os.getcwd())
 from utils import *	 # it imports population response curve making methods
@@ -42,9 +42,9 @@ from mne.stats import permutation_cluster_test,permutation_cluster_1samp_test
 import mne 
 
 # Data path and parameter settings  
-data_path =  '/media/olive/Research/oliver/data_down/' 
+data_path =  '/media/oli/Research/oliver/data_down/' 
 #Pvalues and Pref. Direction plots
-pval_pref_path='/media/olive/Research/oliver/prefDir'
+pval_pref_path='/media/oli/Research/oliver/prefDir'
 
 paradigm = 'task'   
 data_path_task =  os.path.join(data_path,paradigm)  
@@ -52,7 +52,7 @@ data_path_task =  os.path.join(data_path,paradigm)
 paradigm = 'passive' 
 data_path_passive =   os.path.join(data_path,paradigm)
 
-decoding_res_path = '/media/olive/Research/oliver/decoding/pop_decoding_reverse/' 
+decoding_res_path = '/media/oli/Research/oliver/decoding/pop_decoding_reverse/' 
 decoding_res_data_path=os.path.join(decoding_res_path,'tuning_curves')
 decoding_res_fig_path=os.path.join(decoding_res_path ,'plots')  
 decoding_res_slopes_path=os.path.join(decoding_res_path ,'slopes') 
@@ -758,7 +758,7 @@ for roi in ROIs_hetero:  # for each roi
 		
 
 		res=np.column_stack((slope_sig1,slope_sig2))
-		np.savetxt(os.path.join('/media/olive/Research/oliver/pop_slopes/',paradigm,roi+'_'+str(pp)+'.csv'),res,delimiter=',')
+		np.savetxt(os.path.join('/media/oli/Research/oliver/pop_slopes/',paradigm,roi+'_'+str(pp)+'.csv'),res,delimiter=',')
 
 		# permuation clustering for homo-hetero
 		T_obs, clusters, cluster_p_values, H0 = permutation_cluster_1samp_test(sig1-sig2,
@@ -903,7 +903,7 @@ for roi in ROIs_hetero:  # for each roi
 		
 
 		res=np.column_stack((slope_sig1,slope_sig2))
-		np.savetxt(os.path.join('/media/olive/Research/oliver/pop_slopes/',paradigm,roi+'_'+str(pp)+'.csv'),res,delimiter=',')
+		np.savetxt(os.path.join('/media/oli/Research/oliver/pop_slopes/',paradigm,roi+'_'+str(pp)+'.csv'),res,delimiter=',')
 
 		# permuation clustering for homo-hetero
 		T_obs, clusters, cluster_p_values, H0 = permutation_cluster_1samp_test(sig1-sig2,
@@ -961,7 +961,7 @@ for roi in ROIs_hetero:  # for each roi
 	
 
 # Extract the significant time points
-df.to_excel("/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/Significant.xlsx", index=False)
+df.to_excel("/media/oli/Research/oliver/IEMdecodingForCalciumData/neuron_counts/Significant.xlsx", index=False)
 	
  
 # montaging (this will work only if your system is Linux and montage installed))
@@ -1022,7 +1022,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-final=pd.read_csv("/media/olive/Research/oliver/IEMdecodingForCalciumData/neuron_counts/final.csv")
+final=pd.read_csv("/media/oli/Research/oliver/IEMdecodingForCalciumData/neuron_counts/final.csv")
 conds=list(np.unique(final['Condition'])) 
 
 #xx = list(range(len(pvals_threshold)))
@@ -1046,23 +1046,23 @@ for cond in conds:
 	fig, ax = plt.subplots(1,1,figsize=(7,7))
 	
 	# Plot lines 
-	ax.plot(xx,df_task_homo['mean_value'],'r-') 
-	ax.plot(xx,df_task_homo['mean_value'],'ro')
+	ax.plot(xx,df_task_homo['mean_value'],'r-',linewidth=plt_lwd) 
+	ax.plot(xx,df_task_homo['mean_value'],'ro',linewidth=plt_lwd)
 	ax.errorbar(xx,df_task_homo['mean_value'], yerr=df_task_homo['se_value'],
 				fmt='none', capsize=5,color='r')
 	
-	ax.plot(xx,df_passive_homo['mean_value'],'r--') 
-	ax.plot(xx,df_passive_homo['mean_value'],'ro')
+	ax.plot(xx,df_passive_homo['mean_value'],'r--',linewidth=plt_lwd) 
+	ax.plot(xx,df_passive_homo['mean_value'],'ro',linewidth=plt_lwd)
 	ax.errorbar(xx,df_passive_homo['mean_value'], yerr=df_passive_homo['se_value'],
 				fmt='none', capsize=5,color='r') 
 	
-	ax.plot(xx,df_task_hetero['mean_value'],'b-') 
-	ax.plot(xx,df_task_hetero['mean_value'],'bo')
+	ax.plot(xx,df_task_hetero['mean_value'],'b-',linewidth=plt_lwd) 
+	ax.plot(xx,df_task_hetero['mean_value'],'bo',linewidth=plt_lwd)
 	ax.errorbar(xx,df_task_hetero['mean_value'], yerr=df_task_hetero['se_value'],
 				fmt='none', capsize=5,color='b')
 	
-	ax.plot(xx,df_passive_hetero['mean_value'],'b--') 
-	ax.plot(xx,df_passive_hetero['mean_value'],'bo')
+	ax.plot(xx,df_passive_hetero['mean_value'],'b--',linewidth=plt_lwd) 
+	ax.plot(xx,df_passive_hetero['mean_value'],'bo',linewidth=plt_lwd)
 	ax.errorbar(xx,df_passive_hetero['mean_value'], yerr=df_passive_hetero['se_value'],
 				fmt='none', capsize=5,color='b') 
  
