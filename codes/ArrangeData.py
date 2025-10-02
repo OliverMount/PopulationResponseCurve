@@ -1,7 +1,7 @@
 ## Arranging data for population response curve model 
 # this extracts the data and the pvalue from the raw data
 
-# after executing this code, execute the preference directory code
+# after executing this code, execute the preference direction code
 
 import os
 import scipy
